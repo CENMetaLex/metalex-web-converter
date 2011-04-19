@@ -1,7 +1,7 @@
 import os
 import sys
 
-path = '/var/metalex/metalex-web-converter/src/metalex_web_converter'
+path = '/var/metalex/metalex-web-converter/src/metalex_web_converter/'
 if path not in sys.path :
 	sys.path.append(path)
 
