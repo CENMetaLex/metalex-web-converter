@@ -11,7 +11,7 @@ def xml_data(request, bwbnr, doc, version):
     if check_available(bwbnr, doc, version) :
         xml_response = HttpResponse('')
         xml_response.status_code = '303'
-        xml_response['Location'] = 'http://u017101.jur.uva.nl/metalex/BWB{0}_{1}.ml.xml'.format(bwbnr,version)
+        xml_response['Location'] = 'http://u017101.jur.uva.nl/files/BWB{0}_{1}_ml.xml'.format(bwbnr,version)
             
         return xml_response
     else :
@@ -21,7 +21,7 @@ def rdf_data(request, bwbnr, doc, version):
     if check_available(bwbnr, doc, version) :
         rdf_response = HttpResponse('')
         rdf_response.status_code = '303'
-        rdf_response['Location'] = 'http://u017101.jur.uva.nl/metalex/BWB{0}_{1}.n3'.format(bwbnr,version)
+        rdf_response['Location'] = 'http://u017101.jur.uva.nl/files/BWB{0}_{1}.n3'.format(bwbnr,version)
             
         return rdf_response   
     else :
