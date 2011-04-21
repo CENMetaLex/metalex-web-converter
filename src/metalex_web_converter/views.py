@@ -22,16 +22,19 @@ def xml_data(request, bwbnr, path, version):
         return HttpResponse(html)
 
 def rdf_data(request, bwbnr, path, version):
-    if check_available(bwbnr, path, version) :
-        rdf_response = HttpResponse('')
-        rdf_response.status_code = '302'
-        rdf_response['Location'] = 'http://u017101.jur.uva.nl/files/BWB{0}_{1}.n3'.format(bwbnr,version)
-            
-        return rdf_response   
-    else :
-        t = get_template('not_converted.html')
-        html = t.render(RequestContext(request, {'bwb' : bwbnr, 'path' : path, 'version' : version}))
-        return HttpResponse(html)
+    return HttpResponse( describe(bwbnr, path, version) )
+
+#    
+#    if check_available(bwbnr, path, version) :
+#        rdf_response = HttpResponse('')
+#        rdf_response.status_code = '302'
+#        rdf_response['Location'] = 'http://u017101.jur.uva.nl/files/BWB{0}_{1}.n3'.format(bwbnr,version)
+#            
+#        return rdf_response   
+#    else :
+#        t = get_template('not_converted.html')
+#        html = t.render(RequestContext(request, {'bwb' : bwbnr, 'path' : path, 'version' : version}))
+#        return HttpResponse(html)
 
 def html_data(request, bwbnr, path, version):
     if check_available(bwbnr, path, version) :
@@ -95,7 +98,15 @@ def check_available(bwbnr, path, version):
         else :
             return False
     
+def describe(bwbnr, path, version):
+    uri = '<http://doc.metalex.eu/id/BWB{0}/{1}{2}>'.format(bwbnr, path, version)
+    q = "DESCRIBE {0}".format(uri)
     
+    sparql = SPARQLWrapper("http://doc.metalex.eu:3020/sparql/")
+    sparql.setQuery(q)
     
+    return sparql.query()
+    
+
     
     
