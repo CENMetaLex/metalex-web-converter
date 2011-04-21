@@ -10,7 +10,7 @@ urlpatterns = patterns('',
     ('^doc/BWB(\w\d+)/(.*?)(\d\d\d\d-\d\d-\d\d)/data.xml$', xml_data),
     ('^doc/BWB(\w\d+)/(.*?)(\d\d\d\d-\d\d-\d\d)/data.rdf$', rdf_data),
     ('^doc/BWB(\w\d+)/(.*?)(\d\d\d\d-\d\d-\d\d)/data.html$', html_data),
-    ('^doc/BWB(\w\d+)/(.*)$', negotiate),
+    ('^doc/BWB(\w\d+)/(.*?)(\d\d\d\d-\d\d-\d\d)$', negotiate),
     ('^id/BWB(\w\d+)/(.*)$', redirect)
 )
 
