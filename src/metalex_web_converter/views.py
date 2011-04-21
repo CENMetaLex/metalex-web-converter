@@ -21,8 +21,13 @@ def xml_expression_data(request, bwbnr, path, version):
         html = t.render(RequestContext(request, {'bwb' : bwbnr, 'path' : path, 'version' : version}))
         return HttpResponse(html)
 
+def no_xml_work_data(request, bwbnr, path):
+    t = get_template('no_xml_work.html')
+    html = t.render(RequestContext(request, {'bwb' : bwbnr, 'path' : path}))
+    return HttpResponse(html)    
+
 def rdf_expression_data(request, bwbnr, path, version):
-    return HttpResponse( describe(bwbnr, path, version) )
+    return describe(bwbnr, path, version)
 
 def rdf_work_data(request, bwbnr, path):
     return rdf_expression_data(request, bwbnr, path, '')
@@ -101,8 +106,13 @@ def describe(bwbnr, path, version):
     sparql = SPARQLWrapper("http://doc.metalex.eu:3020/sparql/")
     sparql.setQuery(q)
     
-    return sparql.query()
+    response = HttpResponse(sparql.query())
+    response['Content-Type'] = 'application/rdf+xml'
     
+    return response
+    
+def convert(bwbid):
+    pass
 
     
     
