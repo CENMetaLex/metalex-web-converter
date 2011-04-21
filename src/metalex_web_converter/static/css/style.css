@@ -1,0 +1,33 @@
+
+body { 
+	font: 12px/1.4em Verdana, sans-serif; 
+	background: #2e0920;
+	color: white
+}
+
+#header { width: 98%; padding: 5px; margin: 5px; font-weight: bolder; background: #da943a; color: white;}
+
+#content { width: 98%; padding: 5px; margin: 5px; background: white; color: black;}
+
+h1,h2,h3,h4 {
+    font-family:"Trebuchet MS",sans-serif;
+    font-weight:normal;
+}
+
+h2 {
+	font-size: 130%;
+	font-weight: lighter;
+}
+
+
+a:hover {
+    color:#ffe761;
+}
+
+a {text-decoration: none;
+  }
+a img {border: none;
+   }
+a:link, a:visited {
+    color:#ffc757;
+}
