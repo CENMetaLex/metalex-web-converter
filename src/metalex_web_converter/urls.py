@@ -1,17 +1,18 @@
-from django.conf.urls.defaults import patterns, include, url
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from metalex_web_converter.views import rdf_data, xml_data, html_data, negotiate, redirect
+from django.conf.urls.defaults import patterns
+from metalex_web_converter.views import rdf_expression_data, xml_expression_data, html_expression_data, rdf_work_data, html_work_data, negotiate, redirect
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
 # admin.autodiscover()
 
 urlpatterns = patterns('',
-    ('^doc/BWB(\w\d+)/(.*?)(\d\d\d\d-\d\d-\d\d)/data.xml$', xml_data),
-    ('^doc/BWB(\w\d+)/(.*?)(\d\d\d\d-\d\d-\d\d)/data.rdf$', rdf_data),
-    ('^doc/BWB(\w\d+)/(.*?)(\d\d\d\d-\d\d-\d\d)/data.html$', html_data),
-    ('^doc/BWB(\w\d+)/(.*?)(\d\d\d\d-\d\d-\d\d)/$', negotiate),
-    ('^id/BWB(\w\d+)/(.*)$', redirect)
+    ('^doc/BWB(\w\d+)(.*?)(\d\d\d\d-\d\d-\d\d)/data.xml$', xml_expression_data),
+    ('^doc/BWB(\w\d+)(.*?)(\d\d\d\d-\d\d-\d\d)/data.rdf$', rdf_expression_data),
+    ('^doc/BWB(\w\d+)(.*?)/data.rdf$', rdf_work_data),
+    ('^doc/BWB(\w\d+)(.*?)(\d\d\d\d-\d\d-\d\d)/data.html$', html_expression_data),
+    ('^doc/BWB(\w\d+)(.*?)/data.html$', html_work_data),
+    ('^doc/BWB(\w\d+)(.*?)$', negotiate),
+    ('^id/BWB(\w\d+)(.*)$', redirect)
 )
 
 
