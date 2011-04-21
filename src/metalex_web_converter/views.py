@@ -83,7 +83,7 @@ def redirect(request, bwbnr, path):
 
 
 def check_available(bwbnr, path, version):
-    uri = '<http://doc.metalex.eu/id/BWB{0}/{1}{2}>'.format(bwbnr, path, version)
+    uri = '<http://doc.metalex.eu/id/BWB{0}{1}{2}>'.format(bwbnr, path, version)
     q = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX metalex: <http://www.metalex.eu/schema/1.0#>\nASK { "+uri+" rdf:type metalex:BibliographicExpression .}"
     
     sparql = SPARQLWrapper("http://doc.metalex.eu:3020/sparql/")
