@@ -8,6 +8,7 @@ from django.http import HttpResponse
 from SPARQLWrapper import SPARQLWrapper, JSON
 from django.template.loader import get_template
 from django.template import RequestContext
+import json
 
 def xml_expression_data(request, bwbnr, path, version):
     if check_available(bwbnr, path, version) :
@@ -77,6 +78,38 @@ def negotiate(request, bwbnr, path):
         return xml_response
     else :
         return HttpResponse("Accept header is: {0}".format(accept_header))
+
+def redirect_to_latest(request, bwbnr, path):
+    uri = '<http://doc.metalex.eu/id/BWB{0}{1}>'.format(bwbnr, path)
+    
+    q = """PREFIX dcterms: <http://purl.org/dc/terms/> 
+PREFIX metalex: <http://www.metalex.eu/schema/1.0#> 
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?x ?date WHERE {
+   ?x a metalex:BibliographicExpression .
+   ?x metalex:realizes """ + uri + """ .
+   ?x dcterms:valid ?date .
+} ORDER BY ?date"""
+
+    sparql = SPARQLWrapper("http://doc.metalex.eu:3020/sparql/")
+    sparql.setQuery(q)
+    
+    sparql.setReturnFormat(JSON)
+    results = sparql.query().convert().read()
+    
+#    return HttpResponse(results)
+    
+    result_dict = json.loads(results)
+    
+    result = result_dict["results"]["bindings"][0]["x"]["value"] 
+    
+    redir_response = HttpResponse('')
+    redir_response.status_code = '303'
+    redir_response['Location'] = result
+    
+    return redir_response
+
 
 def redirect(request, bwbnr, path):    
     redir_response = HttpResponse('')
