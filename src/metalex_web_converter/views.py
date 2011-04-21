@@ -44,6 +44,7 @@ def html_expression_data(request, bwbnr, path, version):
         t = get_template('not_converted.html')
         html = t.render(RequestContext(request, {'bwb' : bwbnr, 'path' : path, 'version' : version}))
         return HttpResponse(html)
+#        return HttpResponse('<http://doc.metalex.eu/id/BWB{0}{1}{2}>'.format(bwbnr, path, version))
 
 def html_work_data(request, bwbnr, path):
     return html_expression_data(request, bwbnr, path, '')
@@ -84,7 +85,7 @@ def redirect(request, bwbnr, path):
 
 def check_available(bwbnr, path, version):
     uri = '<http://doc.metalex.eu/id/BWB{0}{1}{2}>'.format(bwbnr, path, version)
-    q = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX metalex: <http://www.metalex.eu/schema/1.0#>\nASK { "+uri+" rdf:type metalex:BibliographicExpression .}"
+    q = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX metalex: <http://www.metalex.eu/schema/1.0#>\nASK { "+uri+" rdf:type ?x .}"
     
     sparql = SPARQLWrapper("http://doc.metalex.eu:3020/sparql/")
     sparql.setQuery(q)
