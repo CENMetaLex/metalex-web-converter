@@ -46,25 +46,25 @@ def html_data(request, bwbnr, path, version):
         return HttpResponse(html)
 
 
-def negotiate(request, bwbnr, path):
+def negotiate(request, bwbnr, path, version):
     accept_header = request.META['HTTP_ACCEPT']
     
     if accept_header.find('html') != -1:
         html_response = HttpResponse('')
         html_response.status_code = '302'
-        html_response['Location'] = 'http://doc.metalex.eu/doc/BWB{0}/{1}/data.html'.format(bwbnr,path)
+        html_response['Location'] = 'http://doc.metalex.eu/doc/BWB{0}/{1}{2}/data.html'.format(bwbnr,path,version)
         
         return html_response
     elif accept_header.startswith('application/rdf+xml' or accept_header.startswith('application/x-turtle') or accept_header.startswith('text/rdf+n3')) :        
         rdf_response = HttpResponse('')
         rdf_response.status_code = '302'
-        rdf_response['Location'] = 'http://doc.metalex.eu/doc/BWB{0}/{1}/data.rdf'.format(bwbnr,path)
+        rdf_response['Location'] = 'http://doc.metalex.eu/doc/BWB{0}/{1}{2}/data.rdf'.format(bwbnr,path,version)
         
         return rdf_response
     elif accept_header.startswith('application/xml') or accept_header.startswith('text/xml'):        
         xml_response = HttpResponse('')
         xml_response.status_code = '302'
-        xml_response['Location'] = 'http://doc.metalex.eu/doc/BWB{0}/{1}/data.xml'.format(bwbnr,path)
+        xml_response['Location'] = 'http://doc.metalex.eu/doc/BWB{0}/{1}{2}/data.xml'.format(bwbnr,path,version)
         
         return xml_response
     else :
