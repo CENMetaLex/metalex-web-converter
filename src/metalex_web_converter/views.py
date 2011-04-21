@@ -37,7 +37,7 @@ def html_data(request, bwbnr, path, version):
     if check_available(bwbnr, path, version) :
         html_response = HttpResponse('')
         html_response.status_code = '302'
-        html_response['Location'] = 'http://u017101.jur.uva.nl:3020/browse/list_resource?r=http://doc.metalex.eu/BWB{0}/{1}{2}'.format(bwbnr,path,version)
+        html_response['Location'] = 'http://doc.metalex.eu:3020/browse/list_resource?r=http://doc.metalex.eu/id/BWB{0}/{1}{2}'.format(bwbnr,path,version)
             
         return html_response   
     else :
@@ -79,10 +79,10 @@ def redirect(request, bwbnr, path):
 
 
 def check_available(bwbnr, path, version):
-    uri = '<http://doc.metalex.eu/BWB{0}/{1}{2}>'.format(bwbnr, path, version)
+    uri = '<http://doc.metalex.eu/id/BWB{0}/{1}{2}>'.format(bwbnr, path, version)
     q = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX metalex: <http://www.metalex.eu/schema/1.0#>\nASK { "+uri+" rdf:type metalex:BibliographicExpression .}"
     
-    sparql = SPARQLWrapper("http://u017101.jur.uva.nl:3020/sparql/")
+    sparql = SPARQLWrapper("http://doc.metalex.eu:3020/sparql/")
     sparql.setQuery(q)
     
     
