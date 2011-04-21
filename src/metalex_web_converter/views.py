@@ -102,13 +102,16 @@ SELECT ?x ?date WHERE {
     
     result_dict = json.loads(results)
     
-    result = result_dict["results"]["bindings"][0]["x"]["value"] 
-    
-    redir_response = HttpResponse('')
-    redir_response.status_code = '303'
-    redir_response['Location'] = result
-    
-    return redir_response
+    try :
+        result = result_dict["results"]["bindings"][0]["x"]["value"] 
+        
+        redir_response = HttpResponse('')
+        redir_response.status_code = '303'
+        redir_response['Location'] = result
+        
+        return redir_response
+    except :
+        return HttpResponse('Could not find anything...')
 
 
 def redirect(request, bwbnr, path):    
