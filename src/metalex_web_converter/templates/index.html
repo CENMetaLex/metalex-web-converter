@@ -10,6 +10,14 @@ Current coverage is in the order of 8k documents, about 30% of all regulations h
 that is able to perform a similar conversion for any 'legislative' XML based on a standard mapping from legacy XML elements to CEN MetaLex.
 See the script's <a href="http://github.com/RinkeHoekstra/metalex-converter">GitHub page</a> for installation and usage instructions.</p>
 <p>We hope to be able to provide on-demand conversion of documents not currently available in the repository</p>
+<h3>Example: "Wet werk en inkomen naar arbeidsvermogen"</h3>
+<ul>
+<li>Version of 23 October 2009:<br/><a href="http://doc.metalex.eu/id/BWBR0017869/2009-10-23">http://doc.metalex.eu/id/BWBR0017869/2009-10-23</a>.</li>
+<li>Latest version:<br/><a href="http://doc.metalex.eu/id/BWBR0017869/latest">http://doc.metalex.eu/id/BWBR0017869/latest</a> (should redirect to the same URI).</li>
+<li>The 'work' level identifier:<br/><a href="http://doc.metalex.eu/id/BWBR0017869">http://doc.metalex.eu/id/BWBR0017869</a> (should redirect to the same URI).</li>
+</ul>
+<p>(<strong>NB</strong>: use content negotiation with at tool such as '<a href="http://www.gnu.org/software/wget/">wget</a>' or '<a href="http://curl.haxx.se/">curl</a>' to retrieve non-HTML content (XML or RDF)
+
 <h2>Technical Details</h2>
 <p>RDF representations of regulations reside in a <a href="http://cliopatria.swi-prolog.org">ClioPatria SWI-Prolog Semantic Web Server</a>, developed at VU University Amsterdam and the University of Amsterdam.</p>
 <p>MetaLex XML documents currently reside on the filesystem of the server. We plan to move these to a native XML database to support XQuery access to their structure.</p>
