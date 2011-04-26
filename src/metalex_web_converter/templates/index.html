@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>The MetaLex Document Server</h1>
+<p>Copyright (c) 2011, Rinke Hoekstra, Universiteit van Amsterdam</p>
+<h2>Information</h2>
+<p>This server hosts a fairly sizable number of Dutch regulations in the <a href="http://www.metalex.eu">CEN MetaLex</a> XML and RDF formats. 
+Current coverage is in the order of 8k documents, about 30% of all regulations hosted at <a href="http://overheid.wetten.nl">http://overheid.wetten.nl</a>.</p> 
+<p>The regulations were automatically converted by means of a (hopefully) <a href="http://github.com/RinkeHoekstra/metalex-converter">generic conversion script</a>, 
+that is able to perform a similar conversion for any 'legislative' XML based on a standard mapping from legacy XML elements to CEN MetaLex.
+See the script's <a href="http://github.com/RinkeHoekstra/metalex-converter">GitHub page</a> for installation and usage instructions.</p>
+<p>We hope to be able to provide on-demand conversion of documents not currently available in the repository</p>
+<h2>Technical Details</h2>
+<p>RDF representations of regulations reside in a <a href="http://cliopatria.swi-prolog.org">ClioPatria SWI-Prolog Semantic Web Server</a>, developed at VU University Amsterdam and the University of Amsterdam.</p>
+<p>MetaLex XML documents currently reside on the filesystem of the server. We plan to move these to a native XML database to support XQuery access to their structure.</p>
+<h3>Cool URIs</h3>
+<p></p>
+{% endblock %}

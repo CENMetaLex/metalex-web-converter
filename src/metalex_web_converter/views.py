@@ -14,7 +14,7 @@ def xml_expression_data(request, bwbnr, path, version):
     if check_available(bwbnr, path, version) :
         xml_response = HttpResponse('')
         xml_response.status_code = '302'
-        xml_response['Location'] = 'http://u017101.jur.uva.nl/files/BWB{0}_{1}_ml.xml'.format(bwbnr,version)
+        xml_response['Location'] = 'http://doc.metalex.eu/files/BWB{0}_{1}_ml.xml'.format(bwbnr,version)
             
         return xml_response
     else :
@@ -77,7 +77,9 @@ def negotiate(request, bwbnr, path):
         
         return xml_response
     else :
-        return HttpResponse("Accept header is: {0}".format(accept_header))
+        t = get_template('message.html')
+        html = t.render(RequestContext(request, { 'title': 'Unknown Accept Header', 'text' : 'Unfortunately we do not have content to serve for the accept header "{0}".'.format(accept_header)}))
+        return HttpResponse(html)
 
 def redirect_to_latest(request, bwbnr, path):
     uri = '<http://doc.metalex.eu/id/BWB{0}{1}>'.format(bwbnr, path)
@@ -98,8 +100,6 @@ SELECT ?x ?date WHERE {
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert().read()
     
-#    return HttpResponse(results)
-    
     result_dict = json.loads(results)
     
     try :
@@ -111,7 +111,9 @@ SELECT ?x ?date WHERE {
         
         return redir_response
     except :
-        return HttpResponse('Could not find anything...')
+        t = get_template('message.html')
+        html = t.render(RequestContext(request, { 'title': 'Oops', 'text' : 'No expression found for this work URI.'}))
+        return HttpResponse(html)
 
 
 def redirect(request, bwbnr, path):    
@@ -152,7 +154,14 @@ def describe(bwbnr, path, version):
     return response
     
 def convert(request, bwbid):
-    return HttpResponse('Not implemented yet...')
+    t = get_template('message.html')
+    html = t.render(RequestContext(request, { 'title': 'Not Implemented', 'text' : 'Unfortunately this functionality has not been implemented yet. See <a href="/">here</a> for more information.'}))
+    return HttpResponse(html)
+
+def index(request):
+    t = get_template('index.html')
+    html = t.render(RequestContext(request, {}))
+    return HttpResponse(html)
 
     
     
