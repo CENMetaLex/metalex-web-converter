@@ -38,7 +38,7 @@ def html_expression_data(request, bwbnr, path, version):
     if check_available(bwbnr, path, version) :
         html_response = HttpResponse('')
         html_response.status_code = '302'
-        html_response['Location'] = 'http://doc.metalex.eu:3020/browse/list_resource?r=http://doc.metalex.eu/id/BWB{0}{1}{2}'.format(bwbnr,path,version)
+        html_response['Location'] = 'http://www5.wiwiss.fu-berlin.de/marbles?uri=http://doc.metalex.eu/id/BWB{0}{1}{2}'.format(bwbnr,path,version)
             
         return html_response   
     else :
