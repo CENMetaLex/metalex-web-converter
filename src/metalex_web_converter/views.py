@@ -94,7 +94,7 @@ SELECT ?x ?date WHERE {
    ?x dcterms:valid ?date .
 } ORDER BY ?date"""
 
-    sparql = SPARQLWrapper("http://doc.metalex.eu:3020/sparql/")
+    sparql = SPARQLWrapper("http://doc.metalex.eu:8000/sparql/")
     sparql.setQuery(q)
     
     sparql.setReturnFormat(JSON)
@@ -128,7 +128,7 @@ def check_available(bwbnr, path, version):
     uri = '<http://doc.metalex.eu/id/BWB{0}{1}{2}>'.format(bwbnr, path, version)
     q = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX metalex: <http://www.metalex.eu/schema/1.0#>\nASK { "+uri+" rdf:type ?x .}"
     
-    sparql = SPARQLWrapper("http://doc.metalex.eu:3020/sparql/")
+    sparql = SPARQLWrapper("http://doc.metalex.eu:8000/sparql/")
     sparql.setQuery(q)
     
     
@@ -145,7 +145,7 @@ def describe(bwbnr, path, version):
     uri = '<http://doc.metalex.eu/id/BWB{0}{1}{2}>'.format(bwbnr, path, version)
     q = "DESCRIBE {0}".format(uri)
     
-    sparql = SPARQLWrapper("http://doc.metalex.eu:3020/sparql/")
+    sparql = SPARQLWrapper("http://doc.metalex.eu:8000/sparql/")
     sparql.setQuery(q)
     
     response = HttpResponse(sparql.query())
