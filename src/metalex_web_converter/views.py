@@ -131,15 +131,11 @@ def check_available(bwbnr, path, version):
     sparql = SPARQLWrapper("http://doc.metalex.eu:8000/sparql/")
     sparql.setQuery(q)
     
-    
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
-    
-    for result in results :
-        if result.endswith('"boolean":true}') :
-            return True
-        else :
-            return False
+
+    return results['boolean']
+
     
 def describe(bwbnr, path, version):
     uri = '<http://doc.metalex.eu/id/BWB{0}{1}{2}>'.format(bwbnr, path, version)
@@ -163,5 +159,8 @@ def index(request):
     html = t.render(RequestContext(request, {}))
     return HttpResponse(html)
 
+
+if __name__ == '__main__' :
+    print check_available('R0015195','','')
     
     
