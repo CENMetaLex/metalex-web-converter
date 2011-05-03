@@ -14,7 +14,7 @@ def xml_expression_data(request, bwbid, path, version):
     if check_available(bwbid, path, version) :
         xml_response = HttpResponse('')
         xml_response.status_code = '302'
-        xml_response['Location'] = 'http://doc.metalex.eu/files/BWB{0}_{1}_ml.xml'.format(bwbid,version)
+        xml_response['Location'] = 'http://doc.metalex.eu/files/{0}_{1}_ml.xml'.format(bwbid,version)
             
         return xml_response
     else :
@@ -38,7 +38,7 @@ def html_expression_data(request, bwbid, path, version):
     if check_available(bwbid, path, version) :
         html_response = HttpResponse('')
         html_response.status_code = '302'
-        html_response['Location'] = 'http://www5.wiwiss.fu-berlin.de/marbles?uri=http://doc.metalex.eu/id/BWB{0}{1}{2}'.format(bwbid,path,version)
+        html_response['Location'] = 'http://www5.wiwiss.fu-berlin.de/marbles?uri=http://doc.metalex.eu/id/{0}{1}{2}'.format(bwbid,path,version)
             
         return html_response   
     else :
@@ -77,7 +77,7 @@ def negotiate(request, bwbid, path):
     return HttpResponse(html)
 
 def redirect_to_latest(request, bwbid, path):
-    uri = '<http://doc.metalex.eu/id/{0}{1}>'.format(bwbnr, path)
+    uri = '<http://doc.metalex.eu/id/{0}{1}>'.format(bwbid, path)
     
     q = """PREFIX dcterms: <http://purl.org/dc/terms/> 
 PREFIX metalex: <http://www.metalex.eu/schema/1.0#> 
@@ -114,7 +114,7 @@ SELECT ?x ?date WHERE {
 def redirect(request, bwbid, path):    
     redir_response = HttpResponse('')
     redir_response.status_code = '303'
-    redir_response['Location'] = 'http://doc.metalex.eu/doc/BWB{0}{1}'.format(bwbid,path)
+    redir_response['Location'] = 'http://doc.metalex.eu/doc/{0}{1}'.format(bwbid,path)
     
     return redir_response
 
