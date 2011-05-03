@@ -10,79 +10,74 @@ from django.template.loader import get_template
 from django.template import RequestContext
 import json
 
-def xml_expression_data(request, bwbnr, path, version):
-    if check_available(bwbnr, path, version) :
+def xml_expression_data(request, bwbid, path, version):
+    if check_available(bwbid, path, version) :
         xml_response = HttpResponse('')
         xml_response.status_code = '302'
-        xml_response['Location'] = 'http://doc.metalex.eu/files/BWB{0}_{1}_ml.xml'.format(bwbnr,version)
+        xml_response['Location'] = 'http://doc.metalex.eu/files/BWB{0}_{1}_ml.xml'.format(bwbid,version)
             
         return xml_response
     else :
         t = get_template('not_converted.html')
-        html = t.render(RequestContext(request, {'bwb' : bwbnr, 'path' : path, 'version' : version}))
+        html = t.render(RequestContext(request, {'bwb' : bwbid, 'path' : path, 'version' : version}))
         return HttpResponse(html)
 
-def no_xml_work_data(request, bwbnr, path):
+def no_xml_work_data(request, bwbid, path):
     t = get_template('no_xml_work.html')
-    html = t.render(RequestContext(request, {'bwb' : bwbnr, 'path' : path}))
+    html = t.render(RequestContext(request, {'bwb' : bwbid, 'path' : path}))
     return HttpResponse(html)    
 
-def rdf_expression_data(request, bwbnr, path, version):
-    return describe(bwbnr, path, version)
+def rdf_expression_data(request, bwbid, path, version):
+    return describe(bwbid, path, version)
 
 def rdf_work_data(request, bwbnr, path):
     return rdf_expression_data(request, bwbnr, path, '')
 
 
-def html_expression_data(request, bwbnr, path, version):
-    if check_available(bwbnr, path, version) :
+def html_expression_data(request, bwbid, path, version):
+    if check_available(bwbid, path, version) :
         html_response = HttpResponse('')
         html_response.status_code = '302'
-        html_response['Location'] = 'http://www5.wiwiss.fu-berlin.de/marbles?uri=http://doc.metalex.eu/id/BWB{0}{1}{2}'.format(bwbnr,path,version)
+        html_response['Location'] = 'http://www5.wiwiss.fu-berlin.de/marbles?uri=http://doc.metalex.eu/id/BWB{0}{1}{2}'.format(bwbid,path,version)
             
         return html_response   
     else :
         t = get_template('not_converted.html')
-        html = t.render(RequestContext(request, {'bwb' : bwbnr, 'path' : path, 'version' : version}))
+        html = t.render(RequestContext(request, {'bwb' : bwbid, 'path' : path, 'version' : version}))
         return HttpResponse(html)
 #        return HttpResponse('<http://doc.metalex.eu/id/BWB{0}{1}{2}>'.format(bwbnr, path, version))
 
-def html_work_data(request, bwbnr, path):
-    return html_expression_data(request, bwbnr, path, '')
+def html_work_data(request, bwbid, path):
+    return html_expression_data(request, bwbid, path, '')
 
 
-def negotiate(request, bwbnr, path):
-    accept_header = request.META['HTTP_ACCEPT']
+def negotiate(request, bwbid, path):
+    req_accepted = request.accepted_types 
+    
+    # Registered handlers
+    reg_handlers = {'application/xml': 'html', 'application/xhtml+xml': 'html', 'text/html': 'html',
+                    'application/rdf+xml': 'rdf', 'text/rdf+n3': 'n3', 'application/x-turtle': 'n3', 
+                    'text/xml': 'xml'}
 
-    uri_part = bwbnr + path
+    uri_part = bwbid + path
     if not uri_part.endswith('/') :
         uri_part += '/'
     
-    if accept_header.find('html') != -1:
-        html_response = HttpResponse('')
-        html_response.status_code = '302'
-        html_response['Location'] = 'http://doc.metalex.eu/doc/BWB{0}data.html'.format(uri_part)
-        
-        return html_response
-    elif accept_header.startswith('application/rdf+xml' or accept_header.startswith('application/x-turtle') or accept_header.startswith('text/rdf+n3')) :        
-        rdf_response = HttpResponse('')
-        rdf_response.status_code = '302'
-        rdf_response['Location'] = 'http://doc.metalex.eu/doc/BWB{0}data.rdf'.format(uri_part)
-        
-        return rdf_response
-    elif accept_header.startswith('application/xml') or accept_header.startswith('text/xml'):        
-        xml_response = HttpResponse('')
-        xml_response.status_code = '302'
-        xml_response['Location'] = 'http://doc.metalex.eu/doc/BWB{0}data.xml'.format(uri_part)
-        
-        return xml_response
-    else :
-        t = get_template('message.html')
-        html = t.render(RequestContext(request, { 'title': 'Unknown Accept Header', 'text' : 'Unfortunately we do not have content to serve for the accept header "{0}".'.format(accept_header)}))
-        return HttpResponse(html)
+    for mime in req_accepted :
+        if mime in reg_handlers :
+            redirect_suffix = reg_handlers[mime]
+            response = HttpResponse('')
+            response.status_code = '302'
+            response['Location'] = 'http://doc.metalex.eu/doc/{0}data.{1}'.format(uri_part,redirect_suffix)
+            
+            return response
+     
+    t = get_template('message.html')
+    html = t.render(RequestContext(request, { 'title': 'Unknown Accept Header', 'text' : 'Unfortunately we do not have content to serve for the accept header "{0}".'.format(request.META['HTTP_ACCEPT'])}))
+    return HttpResponse(html)
 
-def redirect_to_latest(request, bwbnr, path):
-    uri = '<http://doc.metalex.eu/id/BWB{0}{1}>'.format(bwbnr, path)
+def redirect_to_latest(request, bwbid, path):
+    uri = '<http://doc.metalex.eu/id/{0}{1}>'.format(bwbnr, path)
     
     q = """PREFIX dcterms: <http://purl.org/dc/terms/> 
 PREFIX metalex: <http://www.metalex.eu/schema/1.0#> 
@@ -116,16 +111,16 @@ SELECT ?x ?date WHERE {
         return HttpResponse(html)
 
 
-def redirect(request, bwbnr, path):    
+def redirect(request, bwbid, path):    
     redir_response = HttpResponse('')
     redir_response.status_code = '303'
-    redir_response['Location'] = 'http://doc.metalex.eu/doc/BWB{0}{1}'.format(bwbnr,path)
+    redir_response['Location'] = 'http://doc.metalex.eu/doc/BWB{0}{1}'.format(bwbid,path)
     
     return redir_response
 
 
-def check_available(bwbnr, path, version):
-    uri = '<http://doc.metalex.eu/id/BWB{0}{1}{2}>'.format(bwbnr, path, version)
+def check_available(bwbid, path, version):
+    uri = '<http://doc.metalex.eu/id/{0}{1}{2}>'.format(bwbid, path, version)
     q = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX metalex: <http://www.metalex.eu/schema/1.0#>\nASK { "+uri+" rdf:type ?x .}"
     
     sparql = SPARQLWrapper("http://doc.metalex.eu:8000/sparql/")
@@ -137,8 +132,8 @@ def check_available(bwbnr, path, version):
     return results['boolean']
 
     
-def describe(bwbnr, path, version):
-    uri = '<http://doc.metalex.eu/id/BWB{0}{1}{2}>'.format(bwbnr, path, version)
+def describe(bwbid, path, version):
+    uri = '<http://doc.metalex.eu/id/{0}{1}{2}>'.format(bwbid, path, version)
     q = "DESCRIBE {0}".format(uri)
     
     sparql = SPARQLWrapper("http://doc.metalex.eu:8000/sparql/")
@@ -158,6 +153,10 @@ def index(request):
     t = get_template('index.html')
     html = t.render(RequestContext(request, {}))
     return HttpResponse(html)
+
+
+        
+
 
 
 if __name__ == '__main__' :

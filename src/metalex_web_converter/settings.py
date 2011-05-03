@@ -100,6 +100,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'metalex_web_converter.accept.AcceptMiddleware',
 )
 
 ROOT_URLCONF = 'metalex_web_converter.urls'
