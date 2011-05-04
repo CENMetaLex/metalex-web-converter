@@ -5,10 +5,27 @@ Created on 19 Apr 2011
 '''
 
 from django.http import HttpResponse
-from SPARQLWrapper import SPARQLWrapper, JSON
+from SPARQLWrapper import SPARQLWrapper, JSON, TURTLE, RDF
 from django.template.loader import get_template
 from django.template import RequestContext
 import json
+
+def net_expression_data(request, bwbid, path, version):
+    if check_available(bwbid, path, version) :
+        xml_response = HttpResponse('')
+        xml_response.status_code = '302'
+        xml_response['Location'] = 'http://doc.metalex.eu/files/{0}_{1}.net'.format(bwbid,version)
+            
+        return xml_response
+    else :
+        t = get_template('not_converted.html')
+        html = t.render(RequestContext(request, {'bwb' : bwbid, 'path' : path, 'version' : version}))
+        return HttpResponse(html)
+
+def no_net_work_data(request, bwbid, path):
+    t = get_template('no_net_work.html')
+    html = t.render(RequestContext(request, {'bwb' : bwbid, 'path' : path}))
+    return HttpResponse(html) 
 
 def xml_expression_data(request, bwbid, path, version):
     if check_available(bwbid, path, version) :
@@ -32,6 +49,12 @@ def rdf_expression_data(request, bwbid, path, version):
 
 def rdf_work_data(request, bwbnr, path):
     return rdf_expression_data(request, bwbnr, path, '')
+
+def turtle_expression_data(request, bwbid, path, version):
+    return describe(bwbid, path, version, format='turtle')
+
+def turtle_work_data(request, bwbnr, path):
+    return turtle_expression_data(request, bwbnr, path, '')
 
 
 def html_expression_data(request, bwbid, path, version):
@@ -57,7 +80,7 @@ def negotiate(request, bwbid, path):
     # Registered handlers
     reg_handlers = {'application/xml': 'html', 'application/xhtml+xml': 'html', 'text/html': 'html',
                     'application/rdf+xml': 'rdf', 'text/rdf+n3': 'n3', 'application/x-turtle': 'n3', 
-                    'text/xml': 'xml'}
+                    'text/xml': 'xml', 'text/plain': 'net'}
 
     uri_part = bwbid + path
     if not uri_part.endswith('/') :
@@ -119,6 +142,7 @@ def redirect(request, bwbid, path):
     return redir_response
 
 
+
 def check_available(bwbid, path, version):
     uri = '<http://doc.metalex.eu/id/{0}{1}{2}>'.format(bwbid, path, version)
     q = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX metalex: <http://www.metalex.eu/schema/1.0#>\nASK { "+uri+" rdf:type ?x .}"
@@ -132,16 +156,22 @@ def check_available(bwbid, path, version):
     return results['boolean']
 
     
-def describe(bwbid, path, version):
+def describe(bwbid, path, version, format='rdfxml'):
     uri = '<http://doc.metalex.eu/id/{0}{1}{2}>'.format(bwbid, path, version)
     q = "DESCRIBE {0}".format(uri)
     
     sparql = SPARQLWrapper("http://doc.metalex.eu:8000/sparql/")
     sparql.setQuery(q)
     
-    response = HttpResponse(sparql.query())
-    response['Content-Type'] = 'application/rdf+xml'
-    
+    if format=='turtle' :
+        sparql.setReturnFormat(TURTLE)
+        response = HttpResponse(sparql.query())
+        response['Content-Type'] = 'application/x-turtle'
+    elif format=='rdfxml' :
+        sparql.setReturnFormat(RDF)
+        response = HttpResponse(sparql.query())
+        response['Content-Type'] = 'application/rdf+xml'
+        
     return response
     
 def convert(request, bwbid):

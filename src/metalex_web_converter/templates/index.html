@@ -1,26 +1,105 @@
-{% extends "base.html" %}
-
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <h1>The MetaLex Document Server</h1>
 <p>Copyright (c) 2011, Rinke Hoekstra, Universiteit van Amsterdam</p>
 <h2>Information</h2>
-<p>This server hosts a fairly sizable number of Dutch regulations in the <a href="http://www.metalex.eu">CEN MetaLex</a> XML and RDF formats. 
-Current coverage is in the order of 8k documents, about 30% of all regulations hosted at <a href="http://overheid.wetten.nl">http://overheid.wetten.nl</a>.</p> 
-<p>The regulations were automatically converted by means of a (hopefully) <a href="http://github.com/RinkeHoekstra/metalex-converter">generic conversion script</a>, 
-that is able to perform a similar conversion for any 'legislative' XML based on a standard mapping from legacy XML elements to CEN MetaLex.
-See the script's <a href="http://github.com/RinkeHoekstra/metalex-converter">GitHub page</a> for installation and usage instructions.</p>
-<p>We hope to be able to provide on-demand conversion of documents not currently available in the repository</p>
-<h3>Example: "Wet werk en inkomen naar arbeidsvermogen"</h3>
+<p>
+	This server hosts almost all Dutch national regulations in the <a
+		href="http://www.metalex.eu">CEN MetaLex</a> XML and RDF formats.
+	Current coverage is in the order of 27k documents, practically all
+	regulations hosted at <a href="http://overheid.wetten.nl">http://overheid.wetten.nl</a>.
+</p>
+<p>
+	The regulations were automatically converted by means of a (hopefully)
+	<a href="http://github.com/RinkeHoekstra/metalex-converter">generic
+		conversion script</a>, that is able to perform a similar conversion for
+	any 'legislative' XML based on a standard mapping from legacy XML
+	elements to CEN MetaLex. See the script's <a
+		href="http://github.com/RinkeHoekstra/metalex-converter">GitHub
+		page</a> for installation and usage instructions.
+</p>
+<p>We hope to be able to provide on-demand conversion of documents
+	not currently available in the repository.</p>
+<h3>Example</h3>
+<p>
+	The following links are several example URIs for the "Regeling
+	beleidsregels vereveningsbijdrage zorgverzekering 2006" (See <a
+		href="http://wetten.overheid.nl/xml.php?regelingID=BWBR0017869">here</a>
+	for the document on Overheid.nl). Clicking on any of them, will
+	redirect to a Marbles representation of RDF metadata about the
+	regulation.
 <ul>
-<li>Version of 23 October 2009:<br/><a href="http://doc.metalex.eu/id/BWBR0017869/2009-10-23">http://doc.metalex.eu/id/BWBR0017869/2009-10-23</a>.</li>
-<li>Latest version:<br/><a href="http://doc.metalex.eu/id/BWBR0017869/latest">http://doc.metalex.eu/id/BWBR0017869/latest</a> (should redirect to the same URI).</li>
-<li>The 'work' level identifier:<br/><a href="http://doc.metalex.eu/id/BWBR0017869">http://doc.metalex.eu/id/BWBR0017869</a> (should redirect to the same URI).</li>
+	<li>Version of 23 October 2009:<br />
+	<a href="http://doc.metalex.eu/id/BWBR0017869/2009-10-23">http://doc.metalex.eu/id/BWBR0017869/2009-10-23</a>.</li>
+	<li>Latest version:<br />
+	<a href="http://doc.metalex.eu/id/BWBR0017869/latest">http://doc.metalex.eu/id/BWBR0017869/latest</a>
+		(should redirect to the same URI).</li>
+	<li>The 'work' level identifier:<br />
+	<a href="http://doc.metalex.eu/id/BWBR0017869">http://doc.metalex.eu/id/BWBR0017869</a>
+		(should redirect to the same URI).</li>
 </ul>
-<p>(<strong>NB</strong>: use content negotiation with at tool such as '<a href="http://www.gnu.org/software/wget/">wget</a>' or '<a href="http://curl.haxx.se/">curl</a>' to retrieve non-HTML content (XML or RDF)
+<p>Alternatively, you can access the document directly, by using a
+	'manifestation' (or 'document') URI that identifies the document (or
+	part of it) in one of the available formats:</p>
+<ul>
+	<li>A <a href="http://www.w3.org/Submission/CBD">concise
+			bounded description<a> of the resource in RDF:<br />
+			<a href="http://doc.metalex.eu/doc/BWBR0017869/2009-10-23/data.rdf">http://doc.metalex.eu/id/BWBR0017869/2009-10-23/data.rdf</a>. <br/>(<strong>Note</strong>: we also support data.ttl and data.n3 suffixes)
+	</li>
+	<li>A HTML representation (through Marbles) of the <a
+		href="http://www.w3.org/Submission/CBD">concise bounded
+			description</a> of the resource:<br />
+	<a href="http://doc.metalex.eu/doc/BWBR0017869/2009-10-23/data.html">http://doc.metalex.eu/id/BWBR0017869/2009-10-23/data.html</a>.</li>
+	<li>The XML representation of the entire document containing the
+		resource:<br />
+	<a href="http://doc.metalex.eu/doc/BWBR0017869/2009-10-23/data.xml">http://doc.metalex.eu/id/BWBR0017869/2009-10-23/data.xml</a>.</li>
+	<li>A Pajek Net file, readable by network analysis tools such as <a href="http://gephi.org">Gephi</a> and <a href="http://pajek.imfm.si/doku.php">Pajek</a>, that describes references to other regulations in :<br />
+	<a href="http://doc.metalex.eu/doc/BWBR0017869/2009-10-23/data.net">http://doc.metalex.eu/id/BWBR0017869/2009-10-23/data.net</a>.</li>
+</ul>
+<p>
+	You can try out content negotiation with tools
+	such as '<a href="http://www.gnu.org/software/wget/">wget</a>' or '<a
+		href="http://curl.haxx.se/">curl</a>' to retrieve non-HTML content from the 'expression' and 'work' level URIs.
+</p>
 
 <h2>Technical Details</h2>
-<p>RDF representations of regulations reside in a <a href="http://cliopatria.swi-prolog.org">ClioPatria SWI-Prolog Semantic Web Server</a>, developed at VU University Amsterdam and the University of Amsterdam.</p>
-<p>MetaLex XML documents currently reside on the filesystem of the server. We plan to move these to a native XML database to support XQuery access to their structure.</p>
+<h3>Metadata</h3>
+Metadata follows the guidelines of the CEN MetaLex standard. Legislative events are represented both by means of the MetaLex ontology, as well as using the <a href="http://openprovenance.org">Open Provenance Model</a> vocabulary (OPMV).
+
+<h3>Store</h3>
+<p>
+	RDF representations of regulations reside in a <a
+		href="http://4store.org">4store</a> triple store, developed at Garlik.
+</p>
+<p>MetaLex XML documents currently reside on the filesystem of the
+	server. We plan to move these to a native XML database to support
+	XQuery access to their structure.</p>
+	
+<h3>Performance and Future Work</h3>
+<p>Don't expect radical speed when using this server (it's just a workstation, really). A proper server has been ordered, but we'll have to live with what we've got for now.</p>
+<p>Once we have better hardware (and more memory!) in place we'll be moving to the <a href="http://cliopatria.swi-prolog.org/home">ClioPatria SWI-Prolog RDF toolkit</a>. This is an in-memory triple store that offers basic inferencing, and has its own HTML browsing interface (including autocomplete for literals).</p>
+
 <h3>Cool URIs</h3>
-<p></p>
+<p>Resources available on this server are disclosed by means of <a href="http://www.w3.org/TR/cooluris/">Cool URIs</a>. </p>
+<p>That is, depending on the accept header sent by the client that performs an HTTP request to the URI of a resource, the server performs a 2-step redirect (actually 3, in this case) to the manifestation that is interpretable by the client. A manifestation is essentially a version of (part of) a document (an expression) in a certain format.</p>
+<p>This server is able to handle the following content types:</p>
+<ul>
+	<li><strong>HTML</strong>: application/xml, application/xhtml+xml, text/html</li>
+	<li><strong>RDF/XML</strong>: application/rdf+xml</li>
+	<li><strong>Turtle</strong>: text/rdf+n3, application/x-turtle</li>
+	<li><strong>XML</strong>: text/xml</li>
+	<li><strong>Net</strong>: text/plain</li>
+</ul>
+<p>URI resolution works as follows:</p>
+<ul>
+	<li>A request for an expression URI (i.e. one that starts with 'http://doc.metalex.eu/id/...' ) is redirected by means of an HTTP 303 to a document URI (one that starts with 'http://doc.metalex.eu/doc/...')</li>
+	<li>This leads to a request for the document URI.</li>
+	<li>We then parse the HTTP accept header of the request, and redirect (via HTTP 302) to the URI of the manifestation URI (i.e. a URI ending with data.rdf, data.n3, data.ttl, data.html, data.xml or data.net)</li>
+	<li>For XML and NET files, we then redirect (via HTTP 302) to the URL of the actual file that contains the description of the resource.</li>
+	<li>For RDF, Turtle and N3 we directly return the the result of a <a href="http://www.w3.org/TR/rdf-sparql-query/#describe">SPARQL DESCRIBE</a> query for the expression URI.</li>
+	<li>For HTML, we redirect (via HTTP 302) to a Marbles server that renders an HTML representation of the result of a <a href="http://www.w3.org/TR/rdf-sparql-query/#describe">SPARQL DESCRIBE</a> query for the expression URI. (Marbles actually sends a request to the expression URI with an accept header that makes this server redirect to the RDF description)</li>
+</ul>
+
+<h3>Limitations</h3>
+<p>The services described above currently only work for 'proper' CEN MetaLex resources, i.e. resources with URI's starting with 'http://doc.metalex.eu/id/...' or 'http://doc.metalex.eu/doc/...'. Sorry!</p>
+
 {% endblock %}
