@@ -8,6 +8,7 @@ from django.http import HttpResponse
 from SPARQLWrapper import SPARQLWrapper, JSON, TURTLE, RDF
 from django.template.loader import get_template
 from django.template import RequestContext
+from rdflib import ConjunctiveGraph
 import json
 
 def net_expression_data(request, bwbid, path, version):
@@ -54,6 +55,12 @@ def turtle_expression_data(request, bwbid, path, version):
     return describe(bwbid, path, version, format='turtle')
 
 def turtle_work_data(request, bwbnr, path):
+    return turtle_expression_data(request, bwbnr, path, '')
+
+def n3_expression_data(request, bwbid, path, version):
+    return describe(bwbid, path, version, format='n3')
+
+def n3_work_data(request, bwbnr, path):
     return turtle_expression_data(request, bwbnr, path, '')
 
 
@@ -163,12 +170,15 @@ def describe(bwbid, path, version, format='rdfxml'):
     sparql = SPARQLWrapper("http://doc.metalex.eu:8000/sparql/")
     sparql.setQuery(q)
     
+    cg = sparql.queryAndConvert()    
+    
     if format=='turtle' :
-        sparql.setReturnFormat(TURTLE)
-        response = HttpResponse(sparql.query())
+        response = HttpResponse(cg.serialize(format='turtle'))
         response['Content-Type'] = 'application/x-turtle'
+    if format=='n3' :
+        response = HttpResponse(cg.serialize(format='n3'))
+        response['Content-Type'] = 'text/rdf+n3'
     elif format=='rdfxml' :
-        sparql.setReturnFormat(RDF)
         response = HttpResponse(sparql.query())
         response['Content-Type'] = 'application/rdf+xml'
         
