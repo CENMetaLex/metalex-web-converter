@@ -3,7 +3,14 @@
 <ul>
 {% for result in results %}
 <li><strong>{{ result.title }}</strong> ({{ result.date }})<br/>
-<a href="{{ result.uri }}">{{ result.uri }}</a></li>
+<table>
+<tr><td>Resource:</td><td><a href="{{ result.uri }}">{{ result.uri }}</a></td></tr>
+<tr><td rowspan="4" valign="top">Formats:</td><td><a href="{{ result.xml }}">{{ result.xml }}</a></td></tr>
+<tr><td><a href="{{ result.rdf }}">{{ result.rdf }}</a></td></tr>
+<tr><td><a href="{{ result.n3 }}">{{ result.n3 }}</a></td></tr>
+<tr><td><a href="{{ result.net }}">{{ result.net }}</a></td></tr>
+</table>
+</li>
 {% endfor %}
 </ul>
 

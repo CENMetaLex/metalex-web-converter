@@ -22,11 +22,14 @@ def search(request):
             q = """PREFIX dcterms: <http://purl.org/dc/terms/> 
             PREFIX metalex: <http://www.metalex.eu/schema/1.0#> 
             PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+            PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
             
-            SELECT DISTINCT ?uri ?title ?date WHERE {
+            SELECT DISTINCT ?uri ?title ?date ?xml WHERE {
                ?uri a metalex:BibliographicExpression .
                ?uri dcterms:valid ?date .
                ?uri dcterms:title ?title .
+               ?uri foaf:page ?xml .
                FILTER (regex(str(?title),\""""+title+"""\", "i") && (xsd:dateTime(?date) <= xsd:dateTime(\""""+str(date)+"""\")))
             } ORDER BY ?date"""
             
@@ -48,6 +51,10 @@ def search(request):
                     v = row[var]
                     if v['type'] == 'uri' :
                         r[var] = v['value']
+                        if var == 'xml' :
+                            r['rdf'] = r[var].replace('data.xml','data.rdf')
+                            r['n3'] = r[var].replace('data.xml','data.n3')
+                            r['net'] = r[var].replace('data.xml','data.net')
                     elif v['type'] == 'literal' :
                         r[var] = v['value']
                 results.append(r)
