@@ -23,7 +23,7 @@ def search(request):
             PREFIX metalex: <http://www.metalex.eu/schema/1.0#> 
             PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
             
-            SELECT ?uri ?title ?date WHERE {
+            SELECT DISTINCT ?uri ?title ?date WHERE {
                ?uri a metalex:BibliographicExpression .
                ?uri dcterms:valid ?date .
                ?uri dcterms:title ?title .
