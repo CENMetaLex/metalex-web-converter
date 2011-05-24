@@ -9,7 +9,61 @@ from SPARQLWrapper import SPARQLWrapper, JSON, TURTLE, RDF
 from django.template.loader import get_template
 from django.template import RequestContext
 from rdflib import ConjunctiveGraph
+from forms import QueryForm
 import json
+
+def search(request):
+    if request.method == 'POST' :
+        form = QueryForm(request.POST)
+        if form.is_valid():
+            title = form.cleaned_data['title']
+#            date = form.cleaned_data['date']
+
+            q = """PREFIX dcterms: <http://purl.org/dc/terms/> 
+            PREFIX metalex: <http://www.metalex.eu/schema/1.0#> 
+            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+            
+            SELECT ?uri ?title ?date WHERE {
+               ?uri a metalex:BibliographicExpression .
+               ?uri dcterms:valid ?date .
+               ?uri dcterms:title ?title .
+               FILTER regex(str(?title),\""""+title+"""\")  
+            } ORDER BY ?date"""
+            
+#            FILTER (?date <= \""""+str(date)+"""\"^^xsd:date)
+
+            sparql = SPARQLWrapper("http://doc.metalex.eu:8000/sparql/")
+            sparql.setQuery(q)
+            
+            sparql.setReturnFormat(JSON)
+            sparql_results = sparql.query().convert()
+            
+            vars = sparql_results['head']['vars']
+            
+            results = []
+            
+            for row in sparql_results['results']['bindings'] :
+                r = {}
+                for var in vars :
+                    v = row[var]
+                    if v['type'] == 'uri' :
+                        r[var] = v['value']
+                    elif v['type'] == 'literal' :
+                        r[var] = v['value']
+                results.append(r)
+            
+            t = get_template('results.html')
+            html = t.render(RequestContext(request, {'results': results,}))
+            
+            return HttpResponse(html)       
+
+    else:
+        form = QueryForm()
+    
+    t = get_template('search.html')
+    html = t.render(RequestContext(request, {'form': form,}))
+    return HttpResponse(html)
+
 
 def net_expression_data(request, bwbid, path, version):
     if check_available(bwbid, path, version) :

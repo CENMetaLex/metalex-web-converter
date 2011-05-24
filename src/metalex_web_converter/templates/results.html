@@ -1,0 +1,10 @@
+{% extends "base.html" %} {% block content %}
+
+<ul>
+{% for result in results %}
+<li><strong>{{ result.title }}</strong> ({{ result.date }})<br/>
+<a href="{{ result.uri }}">{{ result.uri }}</a></li>
+{% endfor %}
+</ul>
+
+{% endblock %}

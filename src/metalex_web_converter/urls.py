@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import patterns
-from metalex_web_converter.views import index, redirect_to_latest, n3_expression_data, n3_work_data, turtle_expression_data, turtle_work_data, rdf_expression_data, xml_expression_data, no_xml_work_data, html_expression_data, rdf_work_data, html_work_data, net_expression_data, no_net_work_data, negotiate, convert, redirect
+from metalex_web_converter.views import index, search, redirect_to_latest, n3_expression_data, n3_work_data, turtle_expression_data, turtle_work_data, rdf_expression_data, xml_expression_data, no_xml_work_data, html_expression_data, rdf_work_data, html_work_data, net_expression_data, no_net_work_data, negotiate, convert, redirect
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -22,6 +22,7 @@ urlpatterns = patterns('',
     ('^id/(?P<bwbid>BWB\w\d+)(?P<path>.*)/latest', redirect_to_latest),
     ('^id/(?P<bwbid>BWB\w\d+)(?P<path>.*)$', redirect),
     ('^convert/(.+)$', convert),
+    ('^search$', search),
     ('^$', index)
 )
 
