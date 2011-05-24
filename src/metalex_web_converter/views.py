@@ -17,7 +17,7 @@ def search(request):
         form = QueryForm(request.POST)
         if form.is_valid():
             title = form.cleaned_data['title']
-#            date = form.cleaned_data['date']
+            date = form.cleaned_data['date']
 
             q = """PREFIX dcterms: <http://purl.org/dc/terms/> 
             PREFIX metalex: <http://www.metalex.eu/schema/1.0#> 
@@ -27,10 +27,10 @@ def search(request):
                ?uri a metalex:BibliographicExpression .
                ?uri dcterms:valid ?date .
                ?uri dcterms:title ?title .
-               FILTER regex(str(?title),\""""+title+"""\")  
+               FILTER (regex(str(?title),\""""+title+"""\", "i") && (xsd:dateTime(?date) <= xsd:dateTime(\""""+str(date)+"""\")))
             } ORDER BY ?date"""
             
-#            FILTER (?date <= \""""+str(date)+"""\"^^xsd:date)
+            
 
             sparql = SPARQLWrapper("http://doc.metalex.eu:8000/sparql/")
             sparql.setQuery(q)
