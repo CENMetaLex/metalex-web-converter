@@ -1,4 +1,6 @@
 {% extends "base.html" %} {% block content %}
+<h2>Search</h2>
+You can search by typing (part of) a title, and a date before which the document was published. Results will be ordered by date.
 
 <form action="/search" method="post">{% csrf_token %}
 <table>{{ form.as_table }}</table>
