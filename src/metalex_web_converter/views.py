@@ -5,10 +5,10 @@ Created on 19 Apr 2011
 '''
 
 from django.http import HttpResponse
-from SPARQLWrapper import SPARQLWrapper, JSON, TURTLE, RDF
+from SPARQLWrapper import SPARQLWrapper, JSON
 from django.template.loader import get_template
 from django.template import RequestContext
-from rdflib import ConjunctiveGraph
+from rdflib import Namespace
 from forms import QueryForm
 import json
 
@@ -72,77 +72,57 @@ def search(request):
     return HttpResponse(html)
 
 
-def net_expression_data(request, bwbid, path, version):
-    if check_available(bwbid, path, version) :
-        xml_response = HttpResponse('')
-        xml_response.status_code = '302'
-        xml_response['Location'] = 'http://doc.metalex.eu/files/{0}_{1}.net'.format(bwbid,version)
-            
-        return xml_response
-    else :
-        t = get_template('not_converted.html')
-        html = t.render(RequestContext(request, {'bwb' : bwbid, 'path' : path, 'version' : version}))
-        return HttpResponse(html)
+def generic_data(request, path, format):
+    return describe(path, format)
 
-def no_net_work_data(request, bwbid, path):
-    t = get_template('no_net_work.html')
-    html = t.render(RequestContext(request, {'bwb' : bwbid, 'path' : path}))
+def expression_data(request, bwbid, path, version, format):
+    if (format == 'net' or format == 'xml') :
+        if check_available(bwbid, path, version) :
+            response = HttpResponse('')
+            response.status_code = '302'
+            response['Location'] = 'http://doc.metalex.eu/files/{0}_{1}.{2}'.format(bwbid,version,format)
+                
+            return response
+        else :
+            t = get_template('not_converted.html')
+            html = t.render(RequestContext(request, {'bwb' : bwbid, 'path' : path, 'version' : version}))
+            return HttpResponse(html)
+    elif (format == 'rdf' or format == 'n3' or format == 'ttl') :
+        return describe(bwbid + path + version, format)
+    elif (format == 'html') :
+        if check_available(bwbid, path, version) :
+            html_response = HttpResponse('')
+            html_response.status_code = '302'
+            html_response['Location'] = 'http://www5.wiwiss.fu-berlin.de/marbles?uri=http://doc.metalex.eu/id/{0}{1}{2}'.format(bwbid,path,version)
+                
+            return html_response   
+        else :
+            t = get_template('not_converted.html')
+            html = t.render(RequestContext(request, {'bwb' : bwbid, 'path' : path, 'version' : version}))
+            return HttpResponse(html)        
+
+def no_work_data(request, bwbid, path, format):
+    t = get_template('no_work.html')
+    html = t.render(RequestContext(request, {'bwb' : bwbid, 'path' : path, 'format' : format}))
     return HttpResponse(html) 
 
-def xml_expression_data(request, bwbid, path, version):
-    if check_available(bwbid, path, version) :
-        xml_response = HttpResponse('')
-        xml_response.status_code = '302'
-        xml_response['Location'] = 'http://doc.metalex.eu/files/{0}_{1}_ml.xml'.format(bwbid,version)
-            
-        return xml_response
-    else :
-        t = get_template('not_converted.html')
-        html = t.render(RequestContext(request, {'bwb' : bwbid, 'path' : path, 'version' : version}))
-        return HttpResponse(html)
-
-def no_xml_work_data(request, bwbid, path):
-    t = get_template('no_xml_work.html')
-    html = t.render(RequestContext(request, {'bwb' : bwbid, 'path' : path}))
-    return HttpResponse(html)    
-
-def rdf_expression_data(request, bwbid, path, version):
-    return describe(bwbid, path, version)
-
-def rdf_work_data(request, bwbnr, path):
-    return rdf_expression_data(request, bwbnr, path, '')
-
-def turtle_expression_data(request, bwbid, path, version):
-    return describe(bwbid, path, version, format='turtle')
-
-def turtle_work_data(request, bwbnr, path):
-    return turtle_expression_data(request, bwbnr, path, '')
-
-def n3_expression_data(request, bwbid, path, version):
-    return describe(bwbid, path, version, format='n3')
-
-def n3_work_data(request, bwbnr, path):
-    return turtle_expression_data(request, bwbnr, path, '')
+def work_data(request, bwbid, path, format):
+    if (format == 'rdf' or format == 'n3' or format == 'ttl') :
+        return describe(bwbid + path, format)
+    elif (format == 'html') :
+        if check_available(bwbid, path, '') :
+            html_response = HttpResponse('')
+            html_response.status_code = '302'
+            html_response['Location'] = 'http://www5.wiwiss.fu-berlin.de/marbles?uri=http://doc.metalex.eu/id/{0}{1}'.format(bwbid,path)
+                
+            return html_response   
+        else :
+            t = get_template('not_converted.html')
+            html = t.render(RequestContext(request, {'bwb' : bwbid, 'path' : path, 'version' : ''}))
+            return HttpResponse(html)
 
 
-def html_expression_data(request, bwbid, path, version):
-    if check_available(bwbid, path, version) :
-        html_response = HttpResponse('')
-        html_response.status_code = '302'
-        html_response['Location'] = 'http://www5.wiwiss.fu-berlin.de/marbles?uri=http://doc.metalex.eu/id/{0}{1}{2}'.format(bwbid,path,version)
-            
-        return html_response   
-    else :
-        t = get_template('not_converted.html')
-        html = t.render(RequestContext(request, {'bwb' : bwbid, 'path' : path, 'version' : version}))
-        return HttpResponse(html)
-#        return HttpResponse('<http://doc.metalex.eu/id/BWB{0}{1}{2}>'.format(bwbnr, path, version))
-
-def html_work_data(request, bwbid, path):
-    return html_expression_data(request, bwbid, path, '')
-
-
-def negotiate(request, bwbid, path):
+def negotiate(request, path):
     req_accepted = request.accepted_types 
     
     # Registered handlers
@@ -150,7 +130,7 @@ def negotiate(request, bwbid, path):
                     'application/rdf+xml': 'rdf', 'text/rdf+n3': 'n3', 'application/x-turtle': 'n3', 
                     'text/xml': 'xml', 'text/plain': 'net'}
 
-    uri_part = bwbid + path
+    uri_part = path
     if not uri_part.endswith('/') :
         uri_part += '/'
     
@@ -202,10 +182,10 @@ SELECT ?x ?date WHERE {
         return HttpResponse(html)
 
 
-def redirect(request, bwbid, path):    
+def redirect(request, path):    
     redir_response = HttpResponse('')
     redir_response.status_code = '303'
-    redir_response['Location'] = 'http://doc.metalex.eu/doc/{0}{1}'.format(bwbid,path)
+    redir_response['Location'] = 'http://doc.metalex.eu/doc/{0}'.format(path)
     
     return redir_response
 
@@ -224,8 +204,8 @@ def check_available(bwbid, path, version):
     return results['boolean']
 
     
-def describe(bwbid, path, version, format='rdfxml'):
-    uri = '<http://doc.metalex.eu/id/{0}{1}{2}>'.format(bwbid, path, version)
+def describe(path, format='rdf'):
+    uri = '<http://doc.metalex.eu/id/{0}>'.format(path)
     q = "DESCRIBE {0}".format(uri)
     
     sparql = SPARQLWrapper("http://doc.metalex.eu:8000/sparql/")
@@ -233,17 +213,50 @@ def describe(bwbid, path, version, format='rdfxml'):
     
     cg = sparql.queryAndConvert()    
     
-    if format=='turtle' :
+    cg = setNamespaces(cg)
+    
+    if format=='ttl' :
         response = HttpResponse(cg.serialize(format='turtle'))
         response['Content-Type'] = 'application/x-turtle'
     if format=='n3' :
         response = HttpResponse(cg.serialize(format='n3'))
         response['Content-Type'] = 'text/rdf+n3'
-    elif format=='rdfxml' :
+    elif format=='rdf' :
         response = HttpResponse(sparql.query())
         response['Content-Type'] = 'application/rdf+xml'
         
     return response
+    
+def setNamespaces(cg):
+    # MetaLex
+    MO = Namespace('http://www.metalex.eu/schema/1.0#')
+    MS = Namespace('http://www.metalex.eu/schema/1.0#')    
+
+    # Standard namespaces
+    RDFS = Namespace('http://www.w3.org/2000/01/rdf-schema#')
+    XML = Namespace('http://www.w3.org/XML/1998/namespace')
+    OWL = Namespace('http://www.w3.org/2002/07/owl#')
+    XHTML = Namespace('http://www.w3.org/1999/xhtml#')
+    OPMV = Namespace('http://purl.org/net/opmv/ns#')
+    TIME = Namespace('http://www.w3.org/2006/time#')
+    DCTERMS = Namespace('http://purl.org/dc/terms/')
+    FOAF = Namespace('http://xmlns.com/foaf/0.1/') 
+    
+    cg.namespace_manager.bind('mo',MO)
+    cg.namespace_manager.bind('ms',MS)
+    cg.namespace_manager.bind('xhtml',XHTML)
+    cg.namespace_manager.bind('owl',OWL)
+    cg.namespace_manager.bind('xml',XML)
+    cg.namespace_manager.bind('rdfs',RDFS)
+    cg.namespace_manager.bind('opmv',OPMV)
+    cg.namespace_manager.bind('time',TIME)
+    cg.namespace_manager.bind('dcterms',DCTERMS)
+    cg.namespace_manager.bind('foaf',FOAF)
+    
+    return cg
+    
+    
+    
     
 def convert(request, bwbid):
     t = get_template('message.html')
