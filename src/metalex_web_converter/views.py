@@ -164,12 +164,11 @@ SELECT ?x ?date WHERE {
     sparql.setQuery(q)
     
     sparql.setReturnFormat(JSON)
-    results = sparql.query().convert().read()
+    results = sparql.query().convert()
     
-    result_dict = json.loads(results)
     
     try :
-        result = result_dict["results"]["bindings"][0]["x"]["value"] 
+        result = results["results"]["bindings"][0]["x"]["value"] 
         
         redir_response = HttpResponse('')
         redir_response.status_code = '303'
