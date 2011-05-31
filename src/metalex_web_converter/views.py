@@ -244,6 +244,7 @@ def setNamespaces(cg):
     TIME = Namespace('http://www.w3.org/2006/time#')
     DCTERMS = Namespace('http://purl.org/dc/terms/')
     FOAF = Namespace('http://xmlns.com/foaf/0.1/') 
+    SEM = Namespace('http://semanticweb.cs.vu.nl/2009/11/sem/')
     
     cg.namespace_manager.bind('mo',MO)
     cg.namespace_manager.bind('ms',MS)
@@ -255,6 +256,7 @@ def setNamespaces(cg):
     cg.namespace_manager.bind('time',TIME)
     cg.namespace_manager.bind('dcterms',DCTERMS)
     cg.namespace_manager.bind('foaf',FOAF)
+    cg.namespace_manager.bind('sem',SEM)
     
     return cg
     
