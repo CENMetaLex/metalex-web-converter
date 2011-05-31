@@ -73,7 +73,19 @@ def search(request):
 
 
 def generic_data(request, path, format):
-    return describe(request, path, format)
+    if(path.startswith('ontology')) :
+        type = 'bwb'
+    else:
+        type = 'id'
+    
+    if (format == 'html') :
+        html_response = HttpResponse('')
+        html_response.status_code = '302'
+        html_response['Location'] = 'http://www5.wiwiss.fu-berlin.de/marbles?uri=http://doc.metalex.eu/{0}/{1}'.format(type,path)
+                
+        return html_response   
+    else :
+        return describe(request, type, path, format)
 
 def expression_data(request, bwbid, path, version, format):
     if (format == 'net' or format == 'xml') :
@@ -88,7 +100,7 @@ def expression_data(request, bwbid, path, version, format):
             html = t.render(RequestContext(request, {'bwb' : bwbid, 'path' : path, 'version' : version}))
             return HttpResponse(html)
     elif (format == 'rdf' or format == 'n3' or format == 'ttl') :
-        return describe(request, bwbid + path + version, format)
+        return describe(request, 'id', bwbid + path + version, format)
     elif (format == 'html') :
         if check_available(bwbid, path, version) :
             html_response = HttpResponse('')
@@ -108,7 +120,7 @@ def no_work_data(request, bwbid, path, format):
 
 def work_data(request, bwbid, path, format):
     if (format == 'rdf' or format == 'n3' or format == 'ttl') :
-        return describe(request, bwbid + path, format)
+        return describe(request, 'id', bwbid + path, format)
     elif (format == 'html') :
         if check_available(bwbid, path, '') :
             html_response = HttpResponse('')
@@ -146,6 +158,10 @@ def negotiate(request, path):
     t = get_template('message.html')
     html = t.render(RequestContext(request, { 'title': 'Unknown Accept Header', 'text' : 'Unfortunately we do not have content to serve for the accept header "{0}".'.format(request.META['HTTP_ACCEPT'])}))
     return HttpResponse(html)
+
+
+
+
 
 def redirect_to_latest(request, bwbid, path):
     uri = '<http://doc.metalex.eu/id/{0}{1}>'.format(bwbid, path)
@@ -203,8 +219,8 @@ def check_available(bwbid, path, version):
     return results['boolean']
 
     
-def describe(request, path, format='rdf'):
-    uri = '<http://doc.metalex.eu/id/{0}>'.format(path)
+def describe(request, type, path, format='rdf'):
+    uri = '<http://doc.metalex.eu/{0}/{1}>'.format(type, path)
     q = "DESCRIBE {0}".format(uri)
     
     sparql = SPARQLWrapper("http://doc.metalex.eu:8000/sparql/")

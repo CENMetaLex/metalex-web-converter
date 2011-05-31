@@ -34,7 +34,7 @@ urlpatterns = patterns('',
     ('^doc/(?P<path>.*?)/data.(?P<format>(rdf|n3|ttl|html))$', generic_data),
     ('^doc/(?P<path>.*?)$', negotiate),
     ('^id/(?P<bwbid>BWB\w\d+)(?P<path>.*)/latest', redirect_to_latest),
-    ('^id/(?P<path>.*)$', redirect),
+    ('^(id|bwb)/(?P<path>.*)$', redirect),
     ('^convert/(.+)$', convert),
     ('^search$', search),
     ('^$', index)
