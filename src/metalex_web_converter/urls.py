@@ -28,10 +28,10 @@ from metalex_web_converter.views import index, search, redirect_to_latest, expre
 
 
 urlpatterns = patterns('',
-    ('^doc/(?P<bwbid>BWB\w\d+)(?P<path>.*?)(?P<version>\d\d\d\d-\d\d-\d\d)/data.(?P<format>(net|xml|rdf|n3|turtle|html))$', expression_data),
+    ('^doc/(?P<bwbid>BWB\w\d+)(?P<path>.*?)(?P<version>\d\d\d\d-\d\d-\d\d)/data.(?P<format>(net|xml|rdf|n3|ttl|html))$', expression_data),
     ('^doc/(?P<bwbid>BWB\w\d+)(?P<path>.*?)/data.(?P<format>(net|xml))$', no_work_data),
-    ('^doc/(?P<bwbid>BWB\w\d+)(?P<path>.*?)/data.(?P<format>(rdf|n3|turtle|html))', work_data),
-    ('^doc/(?P<path>.*?)/data.(?P<format>(rdf|n3|turtle|html))$', generic_data),
+    ('^doc/(?P<bwbid>BWB\w\d+)(?P<path>.*?)/data.(?P<format>(rdf|n3|ttl|html))', work_data),
+    ('^doc/(?P<path>.*?)/data.(?P<format>(rdf|n3|ttl|html))$', generic_data),
     ('^doc/(?P<path>.*?)$', negotiate),
     ('^id/(?P<bwbid>BWB\w\d+)(?P<path>.*)/latest', redirect_to_latest),
     ('^id/(?P<path>.*)$', redirect),
