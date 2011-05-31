@@ -73,7 +73,7 @@ def search(request):
 
 
 def generic_data(request, path, format):
-    return describe(path, format)
+    return describe(request, path, format)
 
 def expression_data(request, bwbid, path, version, format):
     if (format == 'net' or format == 'xml') :
@@ -88,7 +88,7 @@ def expression_data(request, bwbid, path, version, format):
             html = t.render(RequestContext(request, {'bwb' : bwbid, 'path' : path, 'version' : version}))
             return HttpResponse(html)
     elif (format == 'rdf' or format == 'n3' or format == 'ttl') :
-        return describe(bwbid + path + version, format)
+        return describe(request, bwbid + path + version, format)
     elif (format == 'html') :
         if check_available(bwbid, path, version) :
             html_response = HttpResponse('')
@@ -108,7 +108,7 @@ def no_work_data(request, bwbid, path, format):
 
 def work_data(request, bwbid, path, format):
     if (format == 'rdf' or format == 'n3' or format == 'ttl') :
-        return describe(bwbid + path, format)
+        return describe(request, bwbid + path, format)
     elif (format == 'html') :
         if check_available(bwbid, path, '') :
             html_response = HttpResponse('')
@@ -203,7 +203,7 @@ def check_available(bwbid, path, version):
     return results['boolean']
 
     
-def describe(path, format='rdf'):
+def describe(request, path, format='rdf'):
     uri = '<http://doc.metalex.eu/id/{0}>'.format(path)
     q = "DESCRIBE {0}".format(uri)
     
@@ -217,12 +217,16 @@ def describe(path, format='rdf'):
     if format=='ttl' :
         response = HttpResponse(cg.serialize(format='turtle'))
         response['Content-Type'] = 'application/x-turtle'
-    if format=='n3' :
+    elif format=='n3' :
         response = HttpResponse(cg.serialize(format='n3'))
         response['Content-Type'] = 'text/rdf+n3'
     elif format=='rdf' :
         response = HttpResponse(sparql.query())
         response['Content-Type'] = 'application/rdf+xml'
+    else :
+        t = get_template('message.html')
+        html = t.render(RequestContext(request, { 'title': 'Oops', 'text' : 'We do not serve content of this type for this URI'}))
+        return HttpResponse(html)        
         
     return response
     
