@@ -1,7 +1,34 @@
+# -*- coding: utf-8 -*-
 '''
-Created on 19 Apr 2011
+MetaLex Web Converter
+=====================
 
-@author: hoekstra
+@author: Rinke Hoekstra
+@contact: hoekstra@uva.nl
+@organization: Universiteit van Amsterdam
+@version: 0.1
+@status: beta
+@website: http://doc.metalex.eu
+@copyright: 2011, Rinke Hoekstra, Universiteit van Amsterdam
+@deprecated: No longer used
+
+@license: MetaLex Converter is free software, you can redistribute it and/or modify
+it under the terms of GNU Affero General Public License
+as published by the Free Software Foundation, either version 3
+of the License, or (at your option) any later version.
+
+You should have received a copy of the the GNU Affero
+General Public License, along with MetaLex Converter. If not, see
+
+
+Additional permission under the GNU Affero GPL version 3 section 7:
+
+If you modify this Program, or any covered work, by linking or
+combining it with other code, such other code is not for that reason
+alone subject to any of the requirements of the GNU Affero GPL
+version 3.
+
+@summary: Django views for responding to requests for MetaLex resources
 '''
 
 from django.http import HttpResponse
@@ -10,7 +37,6 @@ from django.template.loader import get_template
 from django.template import RequestContext
 from rdflib import Namespace
 from forms import QueryForm
-import json
 
 def search(request):
     if request.method == 'POST' :
