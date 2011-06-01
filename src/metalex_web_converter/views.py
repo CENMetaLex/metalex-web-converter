@@ -118,7 +118,11 @@ def expression_data(request, bwbid, path, version, format):
         if check_available(bwbid, path, version) :
             response = HttpResponse('')
             response.status_code = '302'
-            response['Location'] = 'http://doc.metalex.eu/files/{0}_{1}.{2}'.format(bwbid,version,format)
+            if format == 'xml' :
+                suffix = '_ml'
+            else :
+                suffix = ''
+            response['Location'] = 'http://doc.metalex.eu/files/{0}_{1}{2}.{3}'.format(bwbid,version,suffix,format)
                 
             return response
         else :
