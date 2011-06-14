@@ -193,8 +193,9 @@ def expression_data(request, bwbid, path, version, format):
             response = HttpResponse('')
             response.status_code = '302'
             
-            expression_filename = prepare_xml_expression(request,bwbid, path, version)
+#            expression_filename = prepare_xml_expression(request,bwbid, path, version)
             
+            expression_filename = '{0}{1}_{2}{3}.{4}'.format(FILES_URL, bwbid,version, '_ml',format)
             
             response['Location'] = '{0}{1}'.format(FILES_URL, expression_filename)
                 
