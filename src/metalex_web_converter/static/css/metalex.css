@@ -1,0 +1,119 @@
+
+source_root {
+    display: block;
+    margin-left: 150px; 
+    width: 690px;
+    padding-left: 1em;
+    padding-right: 1em; 
+    background: #fff;
+    line-height: 130%;
+    text-align: justify;
+}
+
+hcontainer { 
+    margin-top: 1em; 
+    display: block;
+}
+
+
+block, htitle { 
+    display: block; 
+    font-family: verdana; 
+    font-size: 80%; 
+    clear: both;
+}
+
+htitle { 
+    font-size: 120%;
+    font-family: "Trebuchet MS";
+    margin: 2em 0 1em 0;
+}
+
+block[class="intitule"] { 
+    font-family: "Trebuchet MS";
+    font-weight: bold;
+    font-size: 140%; 
+    line-height: 150%;
+    margin: 2em 0 1em 0 ; 
+}
+
+block[class="lidnr"], block[class="li.nr"] { 
+    clear: left; 
+}
+
+container {
+    display: block;
+}
+
+container[class="lid"] block[class="al"], container[class="lid"] container[class="li"] { 
+    position: relative;
+    left: 3em;
+    top: -1.6em;
+    padding-right: 3em;
+}
+
+mcontainer+container[class="li"] {
+    margin-top: 1em;
+}
+container[class="li"] block[class="al"], container[class="li"] container[class="li"] {
+    position: relative;
+    left: 2em;
+    top: -1.6em;
+    padding-right: 2em;
+}
+
+container[class="table"] {
+    display: table;
+    font-size: 90%;
+    margin: 2em 0 1em 0;
+}
+container[class="thead"] {
+    font-weight: bolder;
+    display: table-header-group;
+}
+
+container[class="tbody"] {
+    display: table-row-group;
+}
+
+container[class="row"] {
+    display: table-row;
+    clear: both;
+}
+
+container[class="entry"] {
+    display: table-cell;
+    padding: .5em;
+}
+
+milestone[class="colspec"] {
+    display: table-column;
+}
+
+inline[class="label"], inline[class="nr"] {
+    font-weight: bold;
+}
+
+inline[class="titel"] {
+    font-size: 90%;
+    margin: 1em 0 1em 0;
+    display: block;
+}
+
+inline[class="sup"] {
+    font-size: xx-small;
+    vertical-align: top;
+}
+
+inline[class="sub"] {
+    font-size: xx-small;
+    vertical-align: bottom;
+}
+
+inline[class="extref"]:hover, inline[class="intref"]:hover {
+    text-decoration: underline;
+}
+
+inline[class="extref"], inline[class="intref"] {
+    color: navy;
+}
