@@ -191,7 +191,7 @@ def prepare_xml_expression(request,bwbid, path, version):
         expression_file.write('<!-- URI: {0} -->\n'.format(uri))
         
         for c in expression_content :
-            expression_file.write(c)
+            expression_file.write(str(c))
         
         expression_file.close()
 
