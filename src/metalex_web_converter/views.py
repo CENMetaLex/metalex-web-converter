@@ -174,7 +174,7 @@ def prepare_xml_expression(request,bwbid, path, version):
 #            return HttpResponse(html)        
 # ------------------------------------------------------------------------ 
 
-        parent_expression_filename = '{0}_{1}{2}.xml'.format(bwbid,version,'_ml')
+        parent_expression_filename = '{0}{1}_{2}{3}.xml'.format(FILES_DIR,bwbid,version,'_ml')
         bss = BeautifulStoneSoup(open(parent_expression_filename,'r'))
 
 # ------------------------------------------------------------------------ 
