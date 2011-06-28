@@ -123,7 +123,7 @@ def generic_data(request, path, format):
         return describe(request, type, path, format)
 
 def prepare_xml_expression(request,bwbid, path, version):
-    path_underscore = path.replace('/','_').rstrip('_')
+    path_underscore = path.replace('/','_')
     
     expression_filename = '{0}{1}{2}_{3}.xml'.format(bwbid, path_underscore, version, '_ml') 
     expression_filename_css = '{0}{1}{2}_{3}.xml'.format(bwbid, path_underscore, version, '_mls') 
@@ -174,7 +174,7 @@ def prepare_xml_expression(request,bwbid, path, version):
 #            return HttpResponse(html)        
 # ------------------------------------------------------------------------ 
 
-        parent_expression_filename = '{0}{1}{2}.xml'.format(bwbid,version,'_ml')
+        parent_expression_filename = '{0}_{1}{2}.xml'.format(bwbid,version,'_ml')
         bss = BeautifulStoneSoup(open(parent_expression_filename,'r'))
 
 # ------------------------------------------------------------------------ 
