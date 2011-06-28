@@ -358,7 +358,11 @@ def check_available(bwbid, path, version):
     
 def describe(request, type, path, format='rdf'):
     uri = '<http://doc.metalex.eu/{0}/{1}>'.format(type, path)
-    q = "DESCRIBE {0}".format(uri)
+#    q = "DESCRIBE {0}".format(uri)
+
+    # Get a symmetric concise bounded description (SCBD)
+    q = "CONSTRUCT {"+uri+" ?p ?o . ?s ?p2 "+uri+" .} WHERE { {"+uri+" ?p ?o .} UNION {?s ?p2 "+uri+" .} }"
+    
     
     sparql = SPARQLWrapper(SPARQL_ENDPOINT)
     sparql.setQuery(q)
