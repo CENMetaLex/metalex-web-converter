@@ -175,7 +175,9 @@ def prepare_xml_expression(request,bwbid, path, version):
 # ------------------------------------------------------------------------ 
 
         parent_expression_filename = '{0}{1}_{2}{3}.xml'.format(FILES_DIR,bwbid,version,'_ml')
-        bss = BeautifulStoneSoup(open(parent_expression_filename,'r'))
+        
+        # Parse the document using BeautifulStoneSoup, but don't forget to specify potential self closing tags.
+        bss = BeautifulStoneSoup(open(parent_expression_filename,'r'), selfClosingTags=['mcontainer','milestone'])
 
 # ------------------------------------------------------------------------ 
 #        expression_content = bss.findAll(attrs={"about" : opaque_uri})
