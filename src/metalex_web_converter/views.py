@@ -191,6 +191,8 @@ def prepare_xml_expression(request,bwbid, path, version):
         expression_file = open(expression_filepath_css,'w')
         expression_file.write(pi)
         expression_file.write('<!-- URI: {0} -->\n'.format(uri))
+        expression_file.write('<root name="root">\n')
+        expression_file.write('</root>')
         
         
         for c in expression_content :
