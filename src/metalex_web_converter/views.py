@@ -115,7 +115,7 @@ def generic_data(request, path, format):
     
     if (format == 'html') :
         html_response = HttpResponse('')
-        html_response.status_code = '302'
+        html_response.status_code = 302
         html_response['Location'] = 'http://www5.wiwiss.fu-berlin.de/marbles?uri=http://doc.metalex.eu/{0}/{1}'.format(type,path)
                 
         return html_response   
@@ -207,7 +207,7 @@ def expression_data(request, bwbid, path, version, format):
     if (format == 'net') :
         if check_available(bwbid, path, version) :
             response = HttpResponse('')  
-            response.status_code = '302'
+            response.status_code = 302
             response['Location'] = '{0}{1}_{2}.{3}'.format(FILES_URL, bwbid,version,format)
                 
             return response
@@ -218,7 +218,7 @@ def expression_data(request, bwbid, path, version, format):
     elif (format == 'xml') :
         if check_available(bwbid, path, version) :
             response = HttpResponse('')
-            response.status_code = '302'
+            response.status_code = 302
             
             expression_filename = prepare_xml_expression(request, bwbid, path, version)
             
@@ -236,7 +236,7 @@ def expression_data(request, bwbid, path, version, format):
     elif (format == 'html') :
         if check_available(bwbid, path, version) :
             html_response = HttpResponse('')
-            html_response.status_code = '302'
+            html_response.status_code = 302
             html_response['Location'] = 'http://www5.wiwiss.fu-berlin.de/marbles?uri=http://doc.metalex.eu/id/{0}{1}{2}'.format(bwbid,path,version)
                 
             return html_response   
@@ -256,7 +256,7 @@ def work_data(request, bwbid, path, format):
     elif (format == 'html') :
         if check_available(bwbid, path, '') :
             html_response = HttpResponse('')
-            html_response.status_code = '302'
+            html_response.status_code = 302
             html_response['Location'] = 'http://www5.wiwiss.fu-berlin.de/marbles?uri=http://doc.metalex.eu/id/{0}{1}'.format(bwbid,path)
                 
             return html_response   
@@ -282,7 +282,7 @@ def negotiate(request, path):
         if mime in reg_handlers :
             redirect_suffix = reg_handlers[mime]
             response = HttpResponse('')
-            response.status_code = '302'
+            response.status_code = 302
             response['Location'] = 'http://doc.metalex.eu/doc/{0}data.{1}'.format(uri_part,redirect_suffix)
             
             return response
@@ -319,7 +319,7 @@ SELECT ?x ?date WHERE {
         result = results["results"]["bindings"][0]["x"]["value"] 
         
         redir_response = HttpResponse('')
-        redir_response.status_code = '303'
+        redir_response.status_code = 303
         redir_response['Location'] = result
         
         return redir_response
@@ -331,7 +331,7 @@ SELECT ?x ?date WHERE {
 
 def redirect(request, path):    
     redir_response = HttpResponse('')
-    redir_response.status_code = '303'
+    redir_response.status_code = 303
     redir_response['Location'] = 'http://doc.metalex.eu/doc/{0}'.format(path)
     
     return redir_response
