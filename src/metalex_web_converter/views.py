@@ -125,8 +125,8 @@ def generic_data(request, path, format):
 def prepare_xml_expression(request,bwbid, path, version):
     path_underscore = path.replace('/','_')
     
-    expression_filename = '{0}{1}{2}_{3}.xml'.format(bwbid, path_underscore, version, '_ml') 
-    expression_filename_css = '{0}{1}{2}_{3}.xml'.format(bwbid, path_underscore, version, '_mls') 
+    expression_filename = '{0}{1}{2}{3}.xml'.format(bwbid, path_underscore, version, '_ml') 
+    expression_filename_css = '{0}{1}{2}{3}.xml'.format(bwbid, path_underscore, version, '_mls') 
     expression_filepath = '{0}{1}'.format(FILES_DIR, expression_filename)
     expression_filepath_css = '{0}{1}'.format(FILES_DIR, expression_filename_css)
     
@@ -186,6 +186,7 @@ def prepare_xml_expression(request,bwbid, path, version):
         
         expression_file = open(expression_filepath_css,'w')
         expression_file.write(pi)
+        expression_file.write(uri+ '\n')
         expression_file.writelines(expression_content)
         
         expression_file.close()
