@@ -137,8 +137,13 @@ def prepare_xml_expression(request,bwbid, path, version):
         return expression_filename_css
     # If no styled expression exists, but the expression itself does, return a stylised version.
     elif len(glob.glob(expression_filepath)) > 0 :
-        with file(expression_filepath, 'r') as original: data = original.read()
-        with file(expression_filepath_css, 'w') as modified: modified.write(pi + data)
+        with file(expression_filepath, 'r') as original: data = original.readlines()
+        
+        # ... need to skip the processing instruction.
+        with file(expression_filepath_css, 'w') as modified: 
+            modified.write(data[0] + pi)
+            for l in data[1:] :
+                modified.write(l)
         
         return expression_filename_css
     # Else, the expression does not exist, so we will need to extract it.
