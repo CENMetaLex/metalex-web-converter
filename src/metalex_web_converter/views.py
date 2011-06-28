@@ -181,13 +181,17 @@ def prepare_xml_expression(request,bwbid, path, version):
 #        expression_content = bss.findAll(attrs={"about" : opaque_uri})
 # ------------------------------------------------------------------------ 
 
+        # You can test this with http://doc.metalex.eu/id/BWBR0017869/hoofdstuk/I/artikel/1/2009-10-23/data.xml
+
         # We will be checking only for the transparent URI
         expression_content = bss.findAll(attrs={"about" : uri})
         
         expression_file = open(expression_filepath_css,'w')
         expression_file.write(pi)
         expression_file.write('<!-- URI: {0} -->\n'.format(uri))
-        expression_file.writelines(expression_content)
+        
+        for c in expression_content :
+            expression_file.write(c)
         
         expression_file.close()
 
