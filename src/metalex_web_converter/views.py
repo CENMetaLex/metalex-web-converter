@@ -192,8 +192,7 @@ def prepare_xml_expression(request,bwbid, path, version):
         
         
         for c in expression_content :
-            c_str = str(c)
-            expression_file.write(c_str)
+            expression_file.write(c.prettify())
         
         expression_file.close()
 
