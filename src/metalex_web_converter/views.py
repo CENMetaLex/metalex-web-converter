@@ -148,7 +148,7 @@ def prepare_xml_expression(request,bwbid, path, version):
         return expression_filename_css
     # Else, the expression does not exist, so we will need to extract it.
     else :
-        uri = '<http://doc.metalex.eu/id/{0}{1}>'.format(bwbid, path)
+        uri = '<http://doc.metalex.eu/id/{0}{1}/{2}>'.format(bwbid, path, version)
 # ------------------------------------------------------------------------ 
 # The below is only needed if we're checking for opaque uris... but that's not necessary
 # ------------------------------------------------------------------------ 
