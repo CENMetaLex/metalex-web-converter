@@ -132,40 +132,52 @@ def prepare_xml_expression(request,bwbid, path, version):
     
     pi = '<?xml-stylesheet type="text/css" href="http://doc.metalex.eu/static/css/metalex.css"?>\n'
     
+    # If an expression with style information already exists, return it
     if len(glob.glob(expression_filepath_css)) > 0 :
         return expression_filename_css
+    # If no styled expression exists, but the expression itself does, return a stylised version.
     elif len(glob.glob(expression_filepath)) > 0 :
         with file(expression_filepath, 'r') as original: data = original.read()
         with file(expression_filepath_css, 'w') as modified: modified.write(pi + data)
         
         return expression_filename_css
+    # Else, the expression does not exist, so we will need to extract it.
     else :
         uri = '<http://doc.metalex.eu/id/{0}{1}>'.format(bwbid, path)
-    
-        q = """PREFIX owl: <http://www.w3.org/2002/07/owl#>
-    
-    SELECT ?x WHERE {
-        """+uri+""" owl:sameAs ?x
-    }"""
-        
-        sparql = SPARQLWrapper(SPARQL_ENDPOINT)
-        sparql.setQuery(q)
-        
-        sparql.setReturnFormat(JSON)
-        results = sparql.query().convert()
-        
-        
-        try :
-            opaque_uri = results["results"]["bindings"][0]["x"]["value"] 
-        except :
-            t = get_template('message.html')
-            html = t.render(RequestContext(request, { 'title': 'Oops', 'text' : 'No opaque URI found for this transparent expression URI.'}))
-            return HttpResponse(html)        
-        
+# ------------------------------------------------------------------------ 
+# The below is only needed if we're checking for opaque uris... but that's not necessary
+# ------------------------------------------------------------------------ 
+#    
+#        q = """PREFIX owl: <http://www.w3.org/2002/07/owl#>
+#    
+#    SELECT ?x WHERE {
+#        """+uri+""" owl:sameAs ?x
+#    }"""
+#        
+#        sparql = SPARQLWrapper(SPARQL_ENDPOINT)
+#        sparql.setQuery(q)
+#        
+#        sparql.setReturnFormat(JSON)
+#        results = sparql.query().convert()
+#        
+#        
+#        try :
+#            opaque_uri = results["results"]["bindings"][0]["x"]["value"] 
+#        except :
+#            t = get_template('message.html')
+#            html = t.render(RequestContext(request, { 'title': 'Oops', 'text' : 'No opaque URI found for this transparent expression URI.'}))
+#            return HttpResponse(html)        
+# ------------------------------------------------------------------------ 
+
         parent_expression_filename = '{0}{1}{2}.xml'.format(bwbid,version,'_ml')
         bss = BeautifulStoneSoup(open(parent_expression_filename,'r'))
-        
-        expression_content = bss.findAll(attrs={"about" : opaque_uri})
+
+# ------------------------------------------------------------------------ 
+#        expression_content = bss.findAll(attrs={"about" : opaque_uri})
+# ------------------------------------------------------------------------ 
+
+        # We will be checking only for the transparent URI
+        expression_content = bss.findAll(attrs={"about" : uri})
         
         expression_file = open(expression_filepath_css,'w')
         expression_file.write(pi)
@@ -197,7 +209,7 @@ def expression_data(request, bwbid, path, version, format):
             
             expression_filename = prepare_xml_expression(request, bwbid, path, version)
             
-            expression_filename = '{0}_{1}{2}.{3}'.format(bwbid, version, '_ml', format)
+#            expression_filename = '{0}_{1}{2}.{3}'.format(bwbid, version, '_ml', format)
             
             response['Location'] = '{0}{1}'.format(FILES_URL, expression_filename)
                 
