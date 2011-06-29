@@ -132,7 +132,7 @@ def prepare_xml_expression(request,bwbid, path, version):
     expression_filepath = '{0}{1}'.format(FILES_DIR, expression_filename)
     expression_filepath_css = '{0}{1}'.format(STYLED_FILES_DIR, expression_filename_css)
     
-    pi = '<?xml-stylesheet type="text/css" href="http://localhost/static/css/metalex.css"?>\n'
+    pi = '<?xml-stylesheet type="text/css" href="http://doc.metalex.eu/static/css/metalex.css"?>\n'
     
     # If an expression with style information already exists, return it
     if len(glob.glob(expression_filepath_css)) > 0 :
