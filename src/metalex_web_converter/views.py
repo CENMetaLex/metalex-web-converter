@@ -150,44 +150,41 @@ def prepare_xml_expression(request,bwbid, path, version):
     # Else, the expression does not exist, so we will need to extract it.
     else :
         uri = 'http://doc.metalex.eu/id/{0}{1}{2}'.format(bwbid, path, version)
-# ------------------------------------------------------------------------ 
-# The below is only needed if we're checking for opaque uris... but that's not necessary
-# ------------------------------------------------------------------------ 
-#    
-#        q = """PREFIX owl: <http://www.w3.org/2002/07/owl#>
-#    
-#    SELECT ?x WHERE {
-#        <"""+uri+"""> owl:sameAs ?x
-#    }"""
-#        
-#        sparql = SPARQLWrapper(SPARQL_ENDPOINT)
-#        sparql.setQuery(q)
-#        
-#        sparql.setReturnFormat(JSON)
-#        results = sparql.query().convert()
-#        
-#        
-#        try :
-#            opaque_uri = results["results"]["bindings"][0]["x"]["value"] 
-#        except :
-#            t = get_template('message.html')
-#            html = t.render(RequestContext(request, { 'title': 'Oops', 'text' : 'No opaque URI found for this transparent expression URI.'}))
-#            return HttpResponse(html)        
-# ------------------------------------------------------------------------ 
+
 
         parent_expression_filename = '{0}{1}_{2}{3}.xml'.format(FILES_DIR,bwbid,version,'_ml')
         
         # Parse the document using BeautifulStoneSoup, but don't forget to specify potential self closing tags.
         bss = BeautifulStoneSoup(open(parent_expression_filename,'r'), selfClosingTags=['mcontainer','milestone'])
 
-# ------------------------------------------------------------------------ 
-#        expression_content = bss.findAll(attrs={"about" : opaque_uri})
-# ------------------------------------------------------------------------ 
-
         # You can test this with http://doc.metalex.eu/id/BWBR0017869/hoofdstuk/I/artikel/1/2009-10-23/data.xml
 
-        # We will be checking only for the transparent URI
+        # We will be checking first for the transparent URI
         expression_content = bss.findAll(attrs={"about" : uri})
+        if len(expression_content) < 1 :
+            # Apparently no transparent URI was found in the file, so need to find its corresponding opaque URI (NB: this could be multiple!)
+            q = """PREFIX owl: <http://www.w3.org/2002/07/owl#>
+        
+        SELECT ?x WHERE {
+            <"""+uri+"""> owl:sameAs ?x
+        }"""
+            
+            sparql = SPARQLWrapper(SPARQL_ENDPOINT)
+            sparql.setQuery(q)
+            
+            sparql.setReturnFormat(JSON)
+            results = sparql.query().convert()
+            
+            
+            try :
+                opaque_uri = results["results"]["bindings"][0]["x"]["value"] 
+                
+                expression_content = bss.findAll(attrs={"about" : opaque_uri})
+            except :
+                t = get_template('message.html')
+                html = t.render(RequestContext(request, { 'title': 'Oops', 'text' : 'No opaque URI found for this transparent expression URI.'}))
+                return HttpResponse(html)        
+
         
         expression_file = open(expression_filepath_css,'w')
         expression_file.write(pi)
