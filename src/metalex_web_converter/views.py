@@ -197,7 +197,7 @@ def prepare_xml_expression(request,bwbid, path, version):
         expression_file.write('<!-- URI: {0} -->\n'.format(uri))
         expression_file.write('<root name="root">\n')
         for c in expression_content :
-            expression_file.write(c.tostring(tree, pretty_print=True))
+            expression_file.write(etree.tostring(c, pretty_print=True))
  
         expression_file.write('</root>')       
         expression_file.close()
