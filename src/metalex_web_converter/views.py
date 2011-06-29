@@ -37,7 +37,8 @@ from django.template.loader import get_template
 from django.template import RequestContext
 from rdflib import Namespace
 from forms import QueryForm
-from BeautifulSoup import BeautifulStoneSoup
+#from BeautifulSoup import BeautifulStoneSoup
+from lxml import etree
 import glob
 
 
@@ -154,13 +155,17 @@ def prepare_xml_expression(request,bwbid, path, version):
 
         parent_expression_filename = '{0}{1}_{2}{3}.xml'.format(FILES_DIR,bwbid,version,'_ml')
         
-        # Parse the document using BeautifulStoneSoup, but don't forget to specify potential self closing tags.
-        bss = BeautifulStoneSoup(open(parent_expression_filename,'r'), selfClosingTags=['mcontainer','milestone'])
+        
+        # We will be using lxml, BeautifulStoneSoup has too many problems with self closing tags.
+        tree = etree.parse(parent_expression_filename)
+        # DON'T Parse the document using BeautifulStoneSoup, but don't forget to specify potential self closing tags.
+#        bss = BeautifulStoneSoup(open(parent_expressio/n_filename,'r'), selfClosingTags=['mcontainer','milestone'])
 
         # You can test this with http://doc.metalex.eu/id/BWBR0017869/hoofdstuk/I/artikel/1/2009-10-23/data.xml
 
         # We will be checking first for the transparent URI
-        expression_content = bss.findAll(attrs={"about" : uri})
+        expression_content = tree.xpath(".//*[@about='{}']".format(uri))
+#        expression_content = bss.findAll(attrs={"about" : uri})
         if len(expression_content) < 1 :
             # Apparently no transparent URI was found in the file, so need to find its corresponding opaque URI (NB: this could be multiple!)
             q = """PREFIX owl: <http://www.w3.org/2002/07/owl#>
@@ -179,7 +184,8 @@ def prepare_xml_expression(request,bwbid, path, version):
             try :
                 opaque_uri = results["results"]["bindings"][0]["x"]["value"] 
                 
-                expression_content = bss.findAll(attrs={"about" : opaque_uri})
+#                expression_content = bss.findAll(attrs={"about" : opaque_uri})
+                expression_content = tree.xpath(".//*[@about='{}']".format(opaque_uri))
             except :
                 t = get_template('message.html')
                 html = t.render(RequestContext(request, { 'title': 'Oops', 'text' : 'No opaque URI found for this transparent expression URI.'}))
@@ -191,7 +197,7 @@ def prepare_xml_expression(request,bwbid, path, version):
         expression_file.write('<!-- URI: {0} -->\n'.format(uri))
         expression_file.write('<root name="root">\n')
         for c in expression_content :
-            expression_file.write(c.prettify())
+            expression_file.write(c.tostring(tree, pretty_print=True))
  
         expression_file.write('</root>')       
         expression_file.close()
