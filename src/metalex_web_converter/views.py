@@ -63,12 +63,14 @@ def search(request):
             PREFIX foaf: <http://xmlns.com/foaf/0.1/>
             PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
             
-            SELECT DISTINCT ?uri ?title ?date ?xml WHERE {
+            SELECT DISTINCT ?uri ?title ?date ?xml ?event_type WHERE {
                ?uri a metalex:BibliographicExpression .
                ?uri dcterms:valid ?date .
                ?uri dcterms:title ?title .
                ?uri foaf:page ?xml .
-               FILTER (regex(str(?title),\""""+title+"""\", "i") && (xsd:dateTime(?date) <= xsd:dateTime(\""""+str(date)+"""\")))
+               ?uri metalex:resultOf ?event .
+               ?event rdf:type ?event_type .
+               FILTER (regex(str(?title),\""""+title+"""\", "i") && regex(str(?event_type),"bwb","i") && (xsd:dateTime(?date) <= xsd:dateTime(\""""+str(date)+"""\")))
             } ORDER BY ?date"""
             
             
