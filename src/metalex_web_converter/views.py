@@ -37,6 +37,7 @@ from django.template.loader import get_template
 from django.template import RequestContext
 from rdflib import Namespace
 from forms import QueryForm
+import re
 #from BeautifulSoup import BeautifulStoneSoup
 from lxml import etree
 import glob
@@ -125,7 +126,12 @@ def generic_data(request, path, format):
         return describe(request, type, path, format)
 
 def prepare_xml_expression(request,bwbid, path, version):
-    path_underscore = path.replace('/','_')
+    # If our path consists solely of one of the known languages, then we're dealing with an entire regulation, 
+    # and the language tag should not be considered as part of the filename.
+    if re.search('^/(en|pl|de|fr|pt|ru|cs|zh|ne|nl|ar|fj|es)/$',path) is None:
+        path_underscore = '_'
+    else :
+        path_underscore = path.replace('/','_')
     
     expression_filename = '{0}{1}{2}{3}.xml'.format(bwbid, path_underscore, version, '_ml') 
     expression_filename_css = '{0}{1}{2}{3}.xml'.format(bwbid, path_underscore, version, '_mls') 
@@ -189,7 +195,7 @@ def prepare_xml_expression(request,bwbid, path, version):
             except :
                 t = get_template('message.html')
                 html = t.render(RequestContext(request, { 'title': 'Oops', 'text' : 'No opaque URI found for this transparent expression URI.'}))
-                return HttpResponse(html)        
+                return None, HttpResponse(html)        
 
         
         expression_file = open(expression_filepath_css,'w')
@@ -202,7 +208,7 @@ def prepare_xml_expression(request,bwbid, path, version):
         expression_file.write('</root>')       
         expression_file.close()
 
-        return expression_filename_css
+        return expression_filename_css, None
         
         
         
@@ -224,13 +230,15 @@ def expression_data(request, bwbid, path, version, format):
             response = HttpResponse('')
             response.status_code = 302
             
-            expression_filename = prepare_xml_expression(request, bwbid, path, version)
+            expression_filename, httpresponse = prepare_xml_expression(request, bwbid, path, version)
             
 #            expression_filename = '{0}_{1}{2}.{3}'.format(bwbid, version, '_ml', format)
             
-            response['Location'] = '{0}{1}'.format(FILES_URL, expression_filename)
-                
-            return response
+            if httpresponse is None : 
+                response['Location'] = '{0}{1}'.format(FILES_URL, expression_filename)
+                return response
+            else :
+                return httpresponse
         else :
             t = get_template('not_converted.html')
             html = t.render(RequestContext(request, {'bwb' : bwbid, 'path' : path, 'version' : version}))
