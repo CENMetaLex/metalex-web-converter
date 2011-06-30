@@ -142,7 +142,7 @@ def prepare_xml_expression(request,bwbid, path, version):
     
     # If an expression with style information already exists, return it
     if len(glob.glob(expression_filepath_css)) > 0 :
-        return expression_filename_css, None
+        return (expression_filename_css, None)
     # If no styled expression exists, but the expression itself does, return a stylised version.
     elif len(glob.glob(expression_filepath)) > 0 :
         with file(expression_filepath, 'r') as original: data = original.readlines()
@@ -153,7 +153,7 @@ def prepare_xml_expression(request,bwbid, path, version):
             for l in data[1:] :
                 modified.write(l)
         
-        return expression_filename_css, None
+        return (expression_filename_css, None)
     # Else, the expression does not exist, so we will need to extract it.
     else :
         uri = 'http://doc.metalex.eu/id/{0}{1}{2}'.format(bwbid, path, version)
@@ -195,7 +195,7 @@ def prepare_xml_expression(request,bwbid, path, version):
             except :
                 t = get_template('message.html')
                 html = t.render(RequestContext(request, { 'title': 'Oops', 'text' : 'No opaque URI found for this transparent expression URI.\nFilename: {0}\n Hierarchical path: >{1}<'.format(expression_filename, path)}))
-                return None, HttpResponse(html)        
+                return (None, HttpResponse(html))        
 
         
         expression_file = open(expression_filepath_css,'w')
@@ -210,7 +210,7 @@ def prepare_xml_expression(request,bwbid, path, version):
         expression_file.write('</root>')       
         expression_file.close()
 
-        return expression_filename_css, None
+        return (expression_filename_css, None)
         
         
         
@@ -232,7 +232,7 @@ def expression_data(request, bwbid, path, version, format):
             response = HttpResponse('')
             response.status_code = 302
             
-            expression_filename, httpresponse = prepare_xml_expression(request, bwbid, path, version)
+            (expression_filename, httpresponse) = prepare_xml_expression(request, bwbid, path, version)
             
 #            expression_filename = '{0}_{1}{2}.{3}'.format(bwbid, version, '_ml', format)
             
