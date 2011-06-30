@@ -194,7 +194,7 @@ def prepare_xml_expression(request,bwbid, path, version):
                 expression_content = tree.xpath(".//*[@about='{}']".format(opaque_uri))
             except :
                 t = get_template('message.html')
-                html = t.render(RequestContext(request, { 'title': 'Oops', 'text' : 'No opaque URI found for this transparent expression URI.<br/>Filename: {0}'.format(expression_filename)}))
+                html = t.render(RequestContext(request, { 'title': 'Oops', 'text' : 'No opaque URI found for this transparent expression URI.\nFilename: {0}\nHierarchical path: {1}'.format(expression_filename, path)}))
                 return None, HttpResponse(html)        
 
         
