@@ -173,6 +173,8 @@ def prepare_xml_expression(request,bwbid, path, version):
 
         # We will be checking first for the transparent URI
         expression_content = tree.xpath(".//*[@about='{}']".format(uri))
+        opaque_uri = None
+        
 #        expression_content = bss.findAll(attrs={"about" : uri})
         if len(expression_content) < 1 :
             # Apparently no transparent URI was found in the file, so need to find its corresponding opaque URI (NB: this could be multiple!)
