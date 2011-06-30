@@ -69,7 +69,7 @@ def search(request):
                ?uri dcterms:title ?title .
                ?uri foaf:page ?xml .
                ?uri metalex:resultOf ?event .
-               ?event rdf:type ?event_type .
+               ?event a ?event_type .
                FILTER (regex(str(?title),\""""+title+"""\", "i") && regex(str(?event_type),"bwb","i") && (xsd:dateTime(?date) <= xsd:dateTime(\""""+str(date)+"""\")))
             } ORDER BY ?date"""
             
