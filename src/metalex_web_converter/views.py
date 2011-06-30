@@ -128,7 +128,7 @@ def generic_data(request, path, format):
 def prepare_xml_expression(request,bwbid, path, version):
     # If our path consists solely of one of the known languages, then we're dealing with an entire regulation, 
     # and the language tag should not be considered as part of the filename.
-    if re.search('^/(en|pl|de|fr|pt|ru|cs|zh|ne|nl|ar|fj|es)/$',path) is None:
+    if re.search(r'^/(en|pl|de|fr|pt|ru|cs|zh|ne|nl|ar|fj|es)/$',path) is not None:
         path_underscore = '_'
     else :
         path_underscore = path.replace('/','_')
@@ -194,7 +194,7 @@ def prepare_xml_expression(request,bwbid, path, version):
                 expression_content = tree.xpath(".//*[@about='{}']".format(opaque_uri))
             except :
                 t = get_template('message.html')
-                html = t.render(RequestContext(request, { 'title': 'Oops', 'text' : 'No opaque URI found for this transparent expression URI.\nFilename: {0}\nHierarchical path: {1}'.format(expression_filename, path)}))
+                html = t.render(RequestContext(request, { 'title': 'Oops', 'text' : 'No opaque URI found for this transparent expression URI.\nFilename: {0}\n Hierarchical path: >{1}<'.format(expression_filename, path)}))
                 return None, HttpResponse(html)        
 
         
