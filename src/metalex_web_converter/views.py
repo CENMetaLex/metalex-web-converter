@@ -105,7 +105,7 @@ def search(request):
                     for row in sparql_results['results']['bindings'] :
                         r = {}
                         r['uri'] = uri
-                        r['date'] = wr['valid']
+                        r['date'] = wr['valid'].date()
                         for var in vars :
                             v = row[var]
                             if v['type'] == 'uri' :
