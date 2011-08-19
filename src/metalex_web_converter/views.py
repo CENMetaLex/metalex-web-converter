@@ -40,6 +40,7 @@ from whoosh.qparser import QueryParser
 from whoosh.index import open_dir
 from rdflib import Namespace
 from forms import QueryForm
+from datetime import date, datetime, time
 import re
 #from BeautifulSoup import BeautifulStoneSoup
 from lxml import etree
@@ -73,7 +74,7 @@ def search(request):
             results = []
             
             for wr in wresults :
-                if wr['valid'] <= date :
+                if wr['valid'] <= datetime.combine(date,time.min) :
                     uri = wr['uri']
                     
                     q = """PREFIX dcterms: <http://purl.org/dc/terms/> 
@@ -82,8 +83,9 @@ def search(request):
                     PREFIX foaf: <http://xmlns.com/foaf/0.1/>
                     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
                     
-                    SELECT ?xml ?event_type WHERE {
+                    SELECT ?xml ?title ?event_type WHERE {
                        <"""+uri+"""> foaf:page ?xml .
+                       <"""+uri+"""> dcterms:title ?title .
                        <"""+uri+"""> metalex:resultOf ?event .
                        ?event a ?event_type .
                     }"""
@@ -103,7 +105,6 @@ def search(request):
                     for row in sparql_results['results']['bindings'] :
                         r = {}
                         r['uri'] = uri
-                        r['title'] = wr['title']
                         r['date'] = wr['date']
                         for var in vars :
                             v = row[var]
