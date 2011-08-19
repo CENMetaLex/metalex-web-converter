@@ -83,7 +83,7 @@ def search(request):
                     PREFIX foaf: <http://xmlns.com/foaf/0.1/>
                     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
                     
-                    SELECT ?xml ?title ?event_type WHERE {
+                    SELECT DISTINCT ?xml ?title ?event_type WHERE {
                        <"""+uri+"""> foaf:page ?xml .
                        <"""+uri+"""> dcterms:title ?title .
                        <"""+uri+"""> metalex:resultOf ?event .
