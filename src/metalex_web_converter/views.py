@@ -69,7 +69,7 @@ def search(request):
             
             wquery = qp.parse(title)
             
-            wresults = searcher.search(wquery)
+            wresults = searcher.search(wquery, limit=100)
             
             results = []
             
