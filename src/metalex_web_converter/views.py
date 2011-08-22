@@ -56,24 +56,36 @@ STYLED_FILES_DIR = "/var/metalex/store/styled-data/"
 
 SPARQL_ENDPOINT = "http://doc.metalex.eu:8000/sparql/"
 
-ix = open_dir(INDEX_DIR)
-searcher = ix.searcher()
-qp = QueryParser("title", ix.schema)
+
 
 def search(request):
     if request.method == 'POST' :
         form = QueryForm(request.POST)
         if form.is_valid():
+            ix = open_dir(INDEX_DIR)
+            searcher = ix.searcher()
+            qp = QueryParser("title", ix.schema)
+            
             title = form.cleaned_data['title']
             date = form.cleaned_data['date']
+            ctitle = form.cleaned_data['citation_title']
             
-            wquery = qp.parse(title)
+            w_titlequery = qp.parse(title)
             
-            wresults = searcher.search(wquery, limit=100)
+            w_titleresults = searcher.search(w_titlequery, limit=100)
+            
+            # If we have a value for the citation title, add this to the search results
+            if ctitle != '' :  
+                w_ctitlequery = qp.parse(ctitle)
+                
+                w_ctitleresults = searcher.search(w_ctitlequery, limit=100)
+                
+                # Add and update scores based on hits on citation titles
+                w_titleresults.upgrade_and_extend(w_ctitleresults)
             
             results = []
             
-            for wr in wresults :
+            for wr in w_titleresults :
                 if wr['valid'] <= datetime.combine(date,time.min) :
                     uri = wr['uri']
                     
@@ -99,7 +111,6 @@ def search(request):
                     sparql_results = sparql.query().convert()
             
                     vars = sparql_results['head']['vars']
-                    
         
                     
                     for row in sparql_results['results']['bindings'] :

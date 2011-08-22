@@ -36,6 +36,9 @@ version 3.
 {% for result in results %}
 <li><strong>{{ result.title }}</strong> ({{ result.date }})<br/>
 <table>
+{% if result.ctitle != "" %}
+  <tr><td>Citation title:</td><td>{{ result.ctitle }}</td></tr> 
+{% endif %}
 <tr><td>Resource:</td><td><a href="{{ result.uri }}">{{ result.uri }}</a></td></tr>
 <tr><td>Last event:</td><td><a href="{{ result.event_type }}">{{ result.event_type }}</a></td></tr>
 <tr><td rowspan="4" valign="top">Formats:</td><td><a href="{{ result.xml }}">{{ result.xml }}</a></td></tr>

@@ -37,5 +37,6 @@ from datetime import date
 
 class QueryForm(forms.Form):
     title = forms.CharField(max_length = 150, required=True)
+    citation_title = forms.CharField(max_length = 150, required=False)
     date = forms.DateField(initial= date.today,required=True)
     
