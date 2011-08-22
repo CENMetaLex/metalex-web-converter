@@ -113,7 +113,7 @@ def search(request):
                     vars = sparql_results['head']['vars']
         
                     
-                    for row in sparql_results['results']['bindings'][0] :
+                    for row in sparql_results['results']['bindings'] :
                         r = {}
                         r['uri'] = uri
                         r['date'] = wr['valid'].date()
@@ -129,6 +129,7 @@ def search(request):
                                 elif v['type'] == 'literal' :
                                     r[var] = v['value']
                         results.append(r)
+                        break
             
             t = get_template('results.html')
             html = t.render(RequestContext(request, {'results': results,}))
