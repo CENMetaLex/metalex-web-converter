@@ -68,20 +68,18 @@ def search(request):
             
             title = form.cleaned_data['title']
             date = form.cleaned_data['date']
-            ctitle = form.cleaned_data['citation_title']
             
             w_titlequery = qp.parse(title)
             
             w_titleresults = searcher.search(w_titlequery, limit=100)
             
             # If we have a value for the citation title, add this to the search results
-            if ctitle != '' :  
-                w_ctitlequery = qp.parse(ctitle)
+            w_ctitlequery = qp.parse(title)
                 
-                w_ctitleresults = searcher.search(w_ctitlequery, limit=100)
+            w_ctitleresults = searcher.search(w_ctitlequery, limit=100)
                 
-                # Add and update scores based on hits on citation titles
-                w_titleresults.upgrade_and_extend(w_ctitleresults)
+            # Add and update scores based on hits on citation titles
+            w_titleresults.upgrade_and_extend(w_ctitleresults)
             
             results = []
             
@@ -100,7 +98,7 @@ def search(request):
                        <"""+uri+"""> dcterms:title ?title .
                        <"""+uri+"""> metalex:resultOf ?event .
                        ?event a ?event_type .
-                       OPTIONAL { <"""+uri+"""> dcterms:alternative ?ctitle .}
+                       OPTIONAL { <"""+uri+"""> dcterms:alternative ?ctitle . }
                     }"""
             
             
