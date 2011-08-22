@@ -113,7 +113,7 @@ def search(request):
                     vars = sparql_results['head']['vars']
         
                     
-                    for row in sparql_results['results']['bindings'] :
+                    for row in sparql_results['results']['bindings'][0] :
                         r = {}
                         r['uri'] = uri
                         r['date'] = wr['valid'].date()
