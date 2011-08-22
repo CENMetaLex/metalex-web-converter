@@ -64,17 +64,18 @@ def search(request):
         if form.is_valid():
             ix = open_dir(INDEX_DIR)
             searcher = ix.searcher()
-            qp = QueryParser("title", ix.schema)
+            tqp = QueryParser("title", ix.schema)
+            ctqp = QueryParser("ctitle", ix.schema)
             
             title = form.cleaned_data['title']
             date = form.cleaned_data['date']
             
-            w_titlequery = qp.parse(title)
+            w_titlequery = tqp.parse(title)
             
             w_titleresults = searcher.search(w_titlequery, limit=100)
             
             # If we have a value for the citation title, add this to the search results
-            w_ctitlequery = qp.parse(title)
+            w_ctitlequery = ctqp.parse(title)
                 
             w_ctitleresults = searcher.search(w_ctitlequery, limit=100)
                 
