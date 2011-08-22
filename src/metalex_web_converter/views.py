@@ -119,14 +119,15 @@ def search(request):
                         r['date'] = wr['valid'].date()
                         for var in vars :
                             v = row[var]
-                            if v['type'] == 'uri' :
-                                r[var] = v['value']
-                                if var == 'xml' :
-                                    r['rdf'] = r[var].replace('data.xml','data.rdf')
-                                    r['n3'] = r[var].replace('data.xml','data.n3')
-                                    r['net'] = r[var].replace('data.xml','data.net')
-                            elif v['type'] == 'literal' :
-                                r[var] = v['value']
+                            if 'type' in v :
+                                if v['type'] == 'uri' :
+                                    r[var] = v['value']
+                                    if var == 'xml' :
+                                        r['rdf'] = r[var].replace('data.xml','data.rdf')
+                                        r['n3'] = r[var].replace('data.xml','data.n3')
+                                        r['net'] = r[var].replace('data.xml','data.net')
+                                elif v['type'] == 'literal' :
+                                    r[var] = v['value']
                         results.append(r)
             
             t = get_template('results.html')
