@@ -49,9 +49,10 @@ version 3.
 		page</a> for installation and usage instructions.
 </p>
 
+<div style='border: 1px solid black'>
 <h3>Search</h3>
-<p>We have made a simple search interface available at <a href="http://doc.metalex.eu/search">http://doc.metalex.eu/search</a>.
-
+<p>You can search the Metalex Document Server repository at: <a href="http://doc.metalex.eu/search">http://doc.metalex.eu/search</a>.</p>
+</div>
 
 <h3>Presentation</h3>
 
@@ -66,7 +67,7 @@ version 3.
 	beleidsregels vereveningsbijdrage zorgverzekering 2006" (See <a
 		href="http://wetten.overheid.nl/xml.php?regelingID=BWBR0017869">here</a>
 	for the document on Overheid.nl). Clicking on any of them, will
-	redirect to a Marbles representation of RDF metadata about the
+	redirect to a <a href="http://marbles.sourceforge.net">Marbles</a> browser of the RDF metadata about the
 	regulation.
 <ul>
 	<li>Version of 23 October 2009:<br />
@@ -141,7 +142,5 @@ Metadata follows the guidelines of the CEN MetaLex standard. Legislative events 
 	<li>For HTML, we redirect (via HTTP 302) to a Marbles server that renders an HTML representation of the result of a <a href="http://www.w3.org/TR/rdf-sparql-query/#describe">SPARQL DESCRIBE</a> query for the expression URI. (Marbles actually sends a request to the expression URI with an accept header that makes this server redirect to the RDF description)</li>
 </ul>
 
-<h3>Limitations</h3>
-<p>The server has severely limited capacity: don't expect anything fast!</p>
 
 {% endblock %}
