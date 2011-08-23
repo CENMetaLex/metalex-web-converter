@@ -153,7 +153,7 @@ def generic_data(request, path, format):
     if (format == 'html') :
         html_response = HttpResponse('')
         html_response.status_code = 302
-        html_response['Location'] = 'http://www5.wiwiss.fu-berlin.de/marbles?uri=http://doc.metalex.eu/{0}/{1}'.format(type,path)
+        html_response['Location'] = 'http://doc.metalex.eu:8080/marbles/?lang=en&uri=uri=http://doc.metalex.eu/{0}/{1}'.format(type,path)
                 
         return html_response   
     else :
@@ -288,7 +288,7 @@ def expression_data(request, bwbid, path, version, format):
         if check_available(bwbid, path, version) :
             html_response = HttpResponse('')
             html_response.status_code = 302
-            html_response['Location'] = 'http://www5.wiwiss.fu-berlin.de/marbles?uri=http://doc.metalex.eu/id/{0}{1}{2}'.format(bwbid,path,version)
+            html_response['Location'] = 'http://doc.metalex.eu:8080/marbles/?lang=en&uri=http://doc.metalex.eu/id/{0}{1}{2}'.format(bwbid,path,version)
                 
             return html_response   
         else :
@@ -308,7 +308,7 @@ def work_data(request, bwbid, path, format):
         if check_available(bwbid, path, '') :
             html_response = HttpResponse('')
             html_response.status_code = 302
-            html_response['Location'] = 'http://www5.wiwiss.fu-berlin.de/marbles?uri=http://doc.metalex.eu/id/{0}{1}'.format(bwbid,path)
+            html_response['Location'] = 'http://doc.metalex.eu:8080/marbles/?lang=en&uri=http://doc.metalex.eu/id/{0}{1}'.format(bwbid,path)
                 
             return html_response   
         else :
