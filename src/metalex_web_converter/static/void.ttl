@@ -1,0 +1,22 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix void: <http://rdfs.org/ns/void#> .
+@prefix : <#> .
+
+## your dataset
+<http://doc.metalex.eu/static/void.ttl#mds> rdf:type void:Dataset ;
+ foaf:homepage <http://doc.metalex.eu/> ;
+ dcterms:title "MetaLex Document Server" ;
+ dcterms:description "Legal Documents as Versioned Linked Data" ;
+ dcterms:publisher <http://www.leibnizcenter.org> ;
+ dcterms:source <http://overheid.wetten.nl> ;
+ void:sparqlEndpoint <http://doc.metalex.eu:8000/sparql> ;
+ void:uriLookupEndpoint <http://doc.metalex.eu/> ;
+ void:vocabulary <http://purl.org/dc/terms/> ;
+ void:vocabulary <http://purl.org/net/opmv/ns#> ;
+ void:vocabulary <http://xmlns.com/foaf/0.1/> ;
+ void:vocabulary <http://www.metalex.eu/schema/1.0#> ;
+ void:vocabulary <http://www.w3.org/2006/time#> ;
+ void:exampleResource <http://doc.metalex.eu/id/BWBR0020734/2009-01-01> .
