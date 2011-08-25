@@ -492,7 +492,11 @@ def index(request):
     else :
         t_count = 100000000
     
-    locale.setlocale(locale.LC_ALL, locale.getdefaultlocale())
+    try :
+        locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+    except :
+        locale.setlocale(locale.LC_ALL, 'en_US')
+        
     regulations_count = locale.format("%d", r_count, grouping=True)
     triples_count = locale.format("%d", t_count, grouping=True)
     
