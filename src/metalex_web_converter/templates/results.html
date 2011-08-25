@@ -30,12 +30,12 @@ version 3.
 @summary: Search results
 -->
 {% extends "base.html" %} {% block content %}
-<h2>Results</h2>
+<h1>Results</h1>
 
 <ul>
 {% for result in results %}
 <li><strong>{{ result.title }}</strong> ({{ result.date }})<br/>
-<table>
+<table class="common-table zebra-striped">
 {% if result.ctitle %}
   <tr><td>Citation title:</td><td>{{ result.ctitle }}</td></tr> 
 {% endif %}

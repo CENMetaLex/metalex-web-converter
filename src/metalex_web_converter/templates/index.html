@@ -30,15 +30,23 @@ version 3.
 @summary: Main page
 -->
 {% extends "base.html" %} {% block content %}
-<h1>The MetaLex Document Server</h1>
-<p>Copyright (c) 2011, Rinke Hoekstra, Universiteit van Amsterdam</p>
+		<div class="hero-unit">
+			<h1>{{ triples }} triples</h1>
+			<p>This service hosts (almost) all Dutch national regulations in <a
+				href="http://www.metalex.eu">CEN MetaLex</a> XML and as RDF <a href="http://www.w3.org/standards/semanticweb/data">Linked Data</a>.
+			Current coverage is <strong>{{ regulations }}</strong> documents, practically all
+			regulations available through <a href="http://overheid.wetten.nl">http://overheid.wetten.nl</a></p>
+			<p><a class="btn primary large" href="http://doc.metalex.eu/search">Search &raquo;</a></p>
+		</div>
+        
+		<div class="row">
+			<div class="span8">
 <h2>Information</h2>
-<p>
-	This server hosts almost all Dutch national regulations in the <a
-		href="http://www.metalex.eu">CEN MetaLex</a> XML and RDF formats.
-	Current coverage is in the order of 27k documents, practically all
-	regulations hosted at <a href="http://overheid.wetten.nl">http://overheid.wetten.nl</a>.
-</p>
+<p>This service hosts (almost) all Dutch national regulations in <a
+				href="http://www.metalex.eu">CEN MetaLex</a> XML and as RDF <a href="http://www.w3.org/standards/semanticweb/data">Linked Data</a>.
+			Current coverage is <strong>{{ regulations }}</strong> documents, practically all
+			regulations available through <a href="http://overheid.wetten.nl">http://overheid.wetten.nl</a></p>
+<p>This server was developed by <a href="mailto:hoekstra@uva.nl">Rinke Hoekstra</a> and is maintained by the <a href="http://www.leibnizcenter.org">Leibniz Center for Law</a> of the <a href="http://www.uva.nl">Universiteit van Amsterdam</a>.</p>
 <p>
 	The regulations were automatically converted by means of a (hopefully)
 	<a href="http://github.com/RinkeHoekstra/metalex-converter">generic
@@ -48,27 +56,31 @@ version 3.
 		href="http://github.com/RinkeHoekstra/metalex-converter">GitHub
 		page</a> for installation and usage instructions.
 </p>
+<p> A report on this work will be published as part of the proceedings of the <a href="http://iswc2011.semanticweb.org">International Semantic Web Conference</a> (ISWC) 2011: "<em>Rinke Hoekstra</em>. The MetaLex Document Server - Legal Documents as Versioned Linked Data"</p>
 
-<div style='border: 1px solid black'>
-<h3>Search</h3>
-<p>You can search the Metalex Document Server repository at: <a href="http://doc.metalex.eu/search">http://doc.metalex.eu/search</a>.</p>
-</div>
+<p><a class="btn" target="_new" href="http://www.slideshare.net/rinkehoekstra/the-metalex-document-server-legal-documents-as-versioned-linked-data">View presentation &raquo;</a></p>
 
-<h3>Presentation</h3>
+			</div>
+			<div class="span8">
+				<h2>MetaLex and Linked Data</h2>
+				
+				<p><a href="http://www.metalex.eu">CEN MetaLex</a> is a standard for how sources of law and references to sources of law are to be represented in XML.  It is an interchange format, a lowest common denominator for other standards, intended not to replace jurisdiction-specific standards and vendor-specific formats in the publications process but to impose a standardized view on legal documents for the purposes of information exchange and interoperability in the context of software development.</p>
+				<p><a href="http://www.w3.org/standards/semanticweb/data">Linked Data</a> is a W3C sanctioned approach to publishing metadata on the Web using a set of standard languages and metadata vocabularies.</p>
+				<p><a class="btn" href="http://www.metalex.eu">MetaLex &raquo;</a><a class="btn" href="http://www.w3.org/standards/semanticweb/data">Linked Data &raquo;</a></p>
+			</div>
+		</div>
 
-<div style="width:425px" id="__ss_8582652"> <strong style="display:block;margin:12px 0 4px"><a href="http://www.slideshare.net/rinkehoekstra/the-metalex-document-server-legal-documents-as-versioned-linked-data" title="The MetaLex Document Server - Legal Documents as Versioned Linked Data" target="_blank">The MetaLex Document Server - Legal Documents as Versioned Linked Data</a></strong> <iframe src="http://www.slideshare.net/slideshow/embed_code/8582652" width="425" height="355" frameborder="0" marginwidth="0" marginheight="0" scrolling="no"></iframe> <div style="padding:5px 0 12px"> View more <a href="http://www.slideshare.net/" target="_blank">presentations</a> from <a href="http://www.slideshare.net/rinkehoekstra" target="_blank">Rinke Hoekstra</a> </div> </div>
 
-
-<!-- <p>We hope to be able to provide on-demand conversion of documents
-	not currently available in the repository.</p> -->
-<h3>Example</h3>
+<div class="row" style="padding-top: 3em;">
+	<div class="span8">
+<h2>Example</h2>
 <p>
 	The following links are several example URIs for the "Regeling
 	beleidsregels vereveningsbijdrage zorgverzekering 2006" (See <a
 		href="http://wetten.overheid.nl/xml.php?regelingID=BWBR0017869">here</a>
 	for the document on Overheid.nl). Clicking on any of them, will
 	redirect to a <a href="http://marbles.sourceforge.net">Marbles</a> browser of the RDF metadata about the
-	regulation.
+	regulation.</p>
 <ul>
 	<li>Version of 23 October 2009:<br />
 	<a href="http://doc.metalex.eu/id/BWBR0017869/2009-10-23">http://doc.metalex.eu/id/BWBR0017869/2009-10-23</a>.</li>
@@ -102,11 +114,12 @@ version 3.
 	such as '<a href="http://www.gnu.org/software/wget/">wget</a>' or '<a
 		href="http://curl.haxx.se/">curl</a>' to retrieve non-HTML content from the 'expression' and 'work' level URIs.
 </p>
-
-
+	</div>
+	<div class="span8">
+	
 <h2>Technical Details</h2>
 <h3>Metadata</h3>
-Metadata follows the guidelines of the CEN MetaLex standard. Legislative events are represented both by means of the MetaLex ontology, as well as using the <a href="http://openprovenance.org">Open Provenance Model</a> vocabulary (OPMV).
+Metadata follows the guidelines of the CEN MetaLex standard. Legislative events are represented both by means of the MetaLex ontology, as well as using the <a href="http://openprovenance.org">Open Provenance Model</a> vocabulary (OPMV), the Simple Event Model (SEM) and the <a href="http://www.w3.org/TR/owl-time/">W3C Time Ontology</a>.
 
 <h3>Store</h3>
 <p>
@@ -117,10 +130,6 @@ Metadata follows the guidelines of the CEN MetaLex standard. Legislative events 
 	server. We plan to move these to a native XML database to support
 	XQuery access to their structure.</p>
 	
-<h3>Performance and Future Work</h3>
-<p>Don't expect radical speed when using this server (it's just a workstation, really). A proper server has been ordered, but we'll have to live with what we've got for now.</p>
-<p>Once we have better hardware (and more memory!) in place we'll be moving to the <a href="http://cliopatria.swi-prolog.org/home">ClioPatria SWI-Prolog RDF toolkit</a>. This is an in-memory triple store that offers basic inferencing, and has its own HTML browsing interface (including autocomplete for literals).</p>
-
 <h3>Cool URIs</h3>
 <p>Resources available on this server are disclosed by means of <a href="http://www.w3.org/TR/cooluris/">Cool URIs</a>. </p>
 <p>That is, depending on the accept header sent by the client that performs an HTTP request to the URI of a resource, the server performs a 2-step redirect (actually 3, in this case) to the manifestation that is interpretable by the client. A manifestation is essentially a version of (part of) a document (an expression) in a certain format.</p>
@@ -141,6 +150,11 @@ Metadata follows the guidelines of the CEN MetaLex standard. Legislative events 
 	<li>For RDF, Turtle and N3 we directly return the the result of a <a href="http://www.w3.org/TR/rdf-sparql-query/#describe">SPARQL DESCRIBE</a> query for the expression URI.</li>
 	<li>For HTML, we redirect (via HTTP 302) to a Marbles server that renders an HTML representation of the result of a <a href="http://www.w3.org/TR/rdf-sparql-query/#describe">SPARQL DESCRIBE</a> query for the expression URI. (Marbles actually sends a request to the expression URI with an accept header that makes this server redirect to the RDF description)</li>
 </ul>
+</div></div>
+<h3>Copyright (c) 2011 <small>- Rinke Hoekstra, Leibniz Center for Law, Universiteit van Amsterdam</small></h3>
+
+
+	</div>
 
 
 {% endblock %}

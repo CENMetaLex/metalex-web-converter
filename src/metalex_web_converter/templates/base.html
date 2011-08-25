@@ -35,8 +35,8 @@ version 3.
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-    <link rel="stylesheet" href="http://doc.metalex.eu/static/css/style.css" />
-    <title>{% block title %}MetaLex Document Server{% endblock %}</title>
+	<link rel="stylesheet" href="http://twitter.github.com/bootstrap/assets/css/bootstrap-1.1.0.min.css">
+    <title>MetaLex Document Server</title>
     <script type="text/javascript">
 		  var _gaq = _gaq || [];
 		  _gaq.push(['_setAccount', 'UA-2355663-9']);
@@ -51,10 +51,18 @@ version 3.
 </head>
 
 <body>
-	<div id="header">
-		<h2>MetaLex Document Server</h2>
+	<div class="topbar">
+		<div class="fill">
+			<div class="container">
+				<h3><a href="#">The MetaLex Document Server</a></h3>
+				<ul>
+					<li><a href="/">Information</a></li>
+					<li><a href="/search">Search</a></li>
+				</ul>
+			</div>
+		</div>
 	</div>
-    <div id="content">
+	<div class="container">
         {% block content %}{% endblock %}
     </div>
 </body>

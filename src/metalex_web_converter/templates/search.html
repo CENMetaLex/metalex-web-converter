@@ -30,12 +30,16 @@ version 3.
 @summary: Search page
 -->
 {% extends "base.html" %} {% block content %}
-<h2>Search</h2>
-You can search by typing (part of) a title, and a date before which the document was published. Results will be ordered by date.
 
-<form action="/search" method="post">{% csrf_token %}
-<table>{{ form.as_table }}</table>
-<input type="submit" value="Submit" />
-</form>
+	<div class="hero-unit">
+		<h1>Search</h1>
+		<p>You can search by typing (part of) a title, and a date before which the document was published.</p>
+		<p>Results will be ordered by date.</p>
+		
+		<form action="/search" method="post" class="form-stacked">{% csrf_token %}
+		{{ form.as_p }}
+		<button type="submit" value="Submit" class="btn primary">Search</button>
+		</form>
+	</div>
 
 {% endblock %}
