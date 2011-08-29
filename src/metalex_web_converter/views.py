@@ -505,7 +505,10 @@ def index(request):
     return HttpResponse(html)
 
 
-        
+def data(request):
+    t = get_template('data.html')
+    html = t.render(RequestContext(request))
+    return HttpResponse(html)  
 
 
 
