@@ -358,7 +358,7 @@ SELECT ?x ?date WHERE {
    ?x a metalex:BibliographicExpression .
    ?x metalex:realizes """ + uri + """ .
    ?x dcterms:valid ?date .
-} ORDER BY ?date"""
+} ORDER BY DESC(?date)"""
 
     sparql = SPARQLWrapper(SPARQL_ENDPOINT)
     sparql.setQuery(q)
