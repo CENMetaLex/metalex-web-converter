@@ -154,8 +154,9 @@ def generic_data(request, path, format):
     if (format == 'html') :
         html_response = HttpResponse('')
         html_response.status_code = 302
-        html_response['Location'] = 'http://doc.metalex.eu:8080/marbles/?lang=en&uri=http://doc.metalex.eu/{0}/{1}'.format(type,path)
-                
+        # Changed to Pubby redirect!
+        # html_response['Location'] = 'http://doc.metalex.eu:8080/marbles/?lang=en&uri=http://doc.metalex.eu/{0}/{1}'.format(type,path)
+        html_response['location'] = 'http://doc.metalex.eu:8080/{0}/{1}'.format(type,path)        
         return html_response   
     else :
         return describe(request, type, path, format)
@@ -289,8 +290,10 @@ def expression_data(request, bwbid, path, version, format):
         if check_available(bwbid, path, version) :
             html_response = HttpResponse('')
             html_response.status_code = 302
-            html_response['Location'] = 'http://doc.metalex.eu:8080/marbles/?lang=en&uri=http://doc.metalex.eu/id/{0}{1}{2}'.format(bwbid,path,version)
-                
+
+            # html_response['Location'] = 'http://doc.metalex.eu:8080/marbles/?lang=en&uri=http://doc.metalex.eu/id/{0}{1}{2}'.format(bwbid,path,version)
+            html_response['Location'] = 'http://doc.metalex.eu:8080/id/{0}{1}{2}'.format(bwbid,path,version)
+
             return html_response   
         else :
             t = get_template('not_converted.html')
@@ -309,8 +312,9 @@ def work_data(request, bwbid, path, format):
         if check_available(bwbid, path, '') :
             html_response = HttpResponse('')
             html_response.status_code = 302
-            html_response['Location'] = 'http://doc.metalex.eu:8080/marbles/?lang=en&uri=http://doc.metalex.eu/id/{0}{1}'.format(bwbid,path)
-                
+            # html_response['Location'] = 'http://doc.metalex.eu:8080/marbles/?lang=en&uri=http://doc.metalex.eu/id/{0}{1}'.format(bwbid,path)
+            html_response['Location'] = 'http://doc.metalex.eu:8080/id/{0}{1}'.format(bwbid,path)
+    
             return html_response   
         else :
             t = get_template('not_converted.html')
