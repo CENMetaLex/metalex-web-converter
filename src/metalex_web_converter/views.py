@@ -111,14 +111,16 @@ def search(request):
                     sparql.setReturnFormat(JSON)
                     sparql_results = sparql.query().convert()
             
-                    vars = sparql_results['head']['vars']
+                    variables = sparql_results['head']['vars']
         
                     
                     for row in sparql_results['results']['bindings'] :
                         r = {}
                         r['uri'] = uri
                         r['date'] = wr['valid'].date()
-                        for var in vars :
+                        for var in variables :
+                            if not var in row :
+                                continue
                             v = row[var]
                             if 'type' in v :
                                 if v['type'] == 'uri' :
