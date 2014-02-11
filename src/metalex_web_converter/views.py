@@ -63,6 +63,10 @@ def search(request):
     if request.method == 'POST' :
         form = QueryForm(request.POST)
         if form.is_valid():
+            
+            
+            
+            
             ix = open_dir(INDEX_DIR)
             searcher = ix.searcher()
             tqp = QueryParser("title", ix.schema)
@@ -89,19 +93,43 @@ def search(request):
                 if wr['valid'] <= datetime.combine(date,time.min) :
                     uri = wr['uri']
                     
-                    q = """PREFIX dcterms: <http://purl.org/dc/terms/> 
-                    PREFIX metalex: <http://www.metalex.eu/schema/1.0#> 
-                    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-                    PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-                    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-                    
-                    SELECT DISTINCT ?xml ?title ?event_type ?ctitle WHERE {
-                       <"""+uri+"""> foaf:page ?xml .
-                       <"""+uri+"""> dcterms:title ?title .
-                       <"""+uri+"""> metalex:resultOf ?event .
-                       ?event a ?event_type .
-                       OPTIONAL { <"""+uri+"""> dcterms:alternative ?ctitle . }
-                    }"""
+                    q = """PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX metalex: <http://www.metalex.eu/schema/1.0#> 
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+PREFIX prov: <http://www.w3.org/ns/prov#>
+PREFIX dcterm: <http://purl.org/dc/terms/>
+
+SELECT DISTINCT <{0}> ?xml ?title ?time ?source ?agent ?event_type WHERE {{
+  {{
+    GRAPH <{0}>
+    {{
+
+        <{0}> foaf:page ?xml .
+        <{0}> dcterms:title ?title .
+        <{0}> dcterms:source ?source .
+        <{0}> metalex:resultOf/rdf:type ?event_type .
+        FILTER (contains(str(?event_type),"bwb/ontology"))
+    }} 
+  }}
+  UNION
+  {{
+    GRAPH <http://doc.metalex.eu/provenance>
+    {{
+      <{0}> prov:wasGeneratedAtTime ?time .
+      <{0}> prov:wasAttributedTo/foaf:name ?agent .
+    }}
+  }} 
+  UNION 
+  {{
+    GRAPH <{0}> 
+    {{
+        <{0}> prov:wasGeneratedAtTime ?time .
+        <{0}> prov:wasAttributedTo/foaf:name ?agent .
+    }}
+  }}
+}} ORDER BY ?time""".format(uri)
             
             
 
@@ -109,33 +137,57 @@ def search(request):
                     sparql.setQuery(q)
                     
                     sparql.setReturnFormat(JSON)
-                    sparql_results = sparql.query().convert()
-            
+                    
+                    try :
+                        sparql_results = sparql.query().convert()
+                    except :
+                        continue
                     variables = sparql_results['head']['vars']
         
+                    first = True
                     
+                    
+                    r = {'query': q}
+                    r['uri'] = uri
+                    r['date'] = wr['valid'].date()
                     for row in sparql_results['results']['bindings'] :
-                        r = {}
-                        r['uri'] = uri
-                        r['date'] = wr['valid'].date()
-                        for var in variables :
-                            if not var in row :
-                                continue
-                            v = row[var]
-                            if 'type' in v :
-                                if v['type'] == 'uri' :
-                                    r[var] = v['value']
-                                    if var == 'xml' :
-                                        r['rdf'] = r[var].replace('data.xml','data.rdf')
-                                        r['n3'] = r[var].replace('data.xml','data.n3')
-                                        r['net'] = r[var].replace('data.xml','data.net')
-                                elif v['type'] == 'literal' :
-                                    r[var] = v['value']
+                        if len(r.keys()) == 3 and not first:
+                            r['agents'].append(r['agent'])
+                        else :
+                            
+                            
+                            if 'xml' in row:
+                                r['xml'] = row['xml']['value']
+
+                                r['rdf'] = r['xml'].replace('data.xml','data.rdf')
+                                r['n3'] = r['xml'].replace('data.xml','data.n3')
+                                r['net'] = r['xml'].replace('data.xml','data.net')
+                            
+                            if 'title' in row :
+                                r['title'] = row['title']['value']
+                            
+                            if 'event_type' in row:
+                                r['event_type'] = row['event_type']['value']
+                            
+                            if 'time' in row:
+                                r['time'] = row['time']['value']
+                            if 'source' in row:
+                                r['source'] = row['source']['value']
+                            if 'agent' in row:
+                                r['agents'] = [row['agent']['value']]
+                            
+                        
+                        first = False
+
+                    if len(r.keys()) > 3:
                         results.append(r)
-                        break
-            
+                    else :
+                        # We skip results for which the SPARQL query does not return anything.
+                        pass
+                        
+                    
             t = get_template('results.html')
-            html = t.render(RequestContext(request, {'results': results,}))
+            html = t.render(RequestContext(request, {'results': results}))
             
             return HttpResponse(html)       
 

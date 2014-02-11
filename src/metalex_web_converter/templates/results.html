@@ -33,18 +33,19 @@ version 3.
 <h1>Results</h1>
 
 
+
 {% for result in results %}
-<h2>{{ result.title }} <small>({{ result.date }})</small></h2>
+
+
+
+<h2>{{ result.title }} <small>({{ result.time }})</small></h2>
 <table class="common-table zebra-striped">
-{% if result.ctitle %}
-  <tr><td>Citation title:</td><td>{{ result.ctitle }}</td></tr> 
-{% endif %}
 <tr><td>Resource:</td><td><a href="{{ result.uri }}">{{ result.uri }}</a></td></tr>
 <tr><td>Last event:</td><td><a href="{{ result.event_type }}">{{ result.event_type }}</a></td></tr>
 <tr><td rowspan="4" valign="top">Formats:</td><td><a href="{{ result.xml }}">{{ result.xml }}</a></td></tr>
 <tr><td><a href="{{ result.rdf }}">{{ result.rdf }}</a></td></tr>
 <tr><td><a href="{{ result.n3 }}">{{ result.n3 }}</a></td></tr>
-<tr><td><a href="{{ result.net }}">{{ result.net }}</a> (<a href="http://doc.metalex.eu:8080/metalex-gephi-servlet/gephi?uri={{ result.net }}">view</a>)</td></tr>
+<!-- <tr><td><a href="{{ result.net }}">{{ result.net }}</a> (<a href="http://doc.metalex.eu:8080/metalex-gephi-servlet/gephi?uri={{ result.net }}">view</a>)</td></tr> -->
 </table>
 
 {% endfor %}
