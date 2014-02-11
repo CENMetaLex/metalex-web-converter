@@ -154,7 +154,7 @@ def generic_data(request, path, format):
     if (format == 'html') :
         html_response = HttpResponse('')
         html_response.status_code = 302
-	# Changed to Pubby redirect!
+        # Changed to Pubby redirect!
         # html_response['Location'] = 'http://doc.metalex.eu:8080/marbles/?lang=en&uri=http://doc.metalex.eu/{0}/{1}'.format(type,path)
         html_response['location'] = 'http://doc.metalex.eu:8080/{0}/{1}'.format(type,path)        
         return html_response   
@@ -290,8 +290,10 @@ def expression_data(request, bwbid, path, version, format):
         if check_available(bwbid, path, version) :
             html_response = HttpResponse('')
             html_response.status_code = 302
-            html_response['Location'] = 'http://doc.metalex.eu:8080/marbles/?lang=en&uri=http://doc.metalex.eu/id/{0}{1}{2}'.format(bwbid,path,version)
-                
+
+            # html_response['Location'] = 'http://doc.metalex.eu:8080/marbles/?lang=en&uri=http://doc.metalex.eu/id/{0}{1}{2}'.format(bwbid,path,version)
+            html_response['Location'] = 'http://doc.metalex.eu:8080/id/{0}{1}{2}'.format(bwbid,path,version)
+
             return html_response   
         else :
             t = get_template('not_converted.html')
@@ -310,8 +312,9 @@ def work_data(request, bwbid, path, format):
         if check_available(bwbid, path, '') :
             html_response = HttpResponse('')
             html_response.status_code = 302
-            html_response['Location'] = 'http://doc.metalex.eu:8080/marbles/?lang=en&uri=http://doc.metalex.eu/id/{0}{1}'.format(bwbid,path)
-                
+            # html_response['Location'] = 'http://doc.metalex.eu:8080/marbles/?lang=en&uri=http://doc.metalex.eu/id/{0}{1}'.format(bwbid,path)
+            html_response['Location'] = 'http://doc.metalex.eu:8080/id/{0}{1}'.format(bwbid,path)
+    
             return html_response   
         else :
             t = get_template('not_converted.html')
@@ -484,14 +487,14 @@ def index(request):
     if r_count == 0 :
         r_count = 27000
     
-    info = urllib2.urlopen("http://doc.metalex.eu:8000/status/size/")
-    html = info.read()
-    
-    match = re.search(r'<th>Total</th><td>(.*?)</td>', html)
-    if match :
-        t_count = long(match.group(1))
-    else :
-        t_count = 100000000
+    # info = urllib2.urlopen("http://doc.metalex.eu:8000/status/size/")
+    # html = info.read()
+    # 
+    # match = re.search(r'<th>Total</th><td>(.*?)</td>', html)
+    # if match :
+    #     t_count = long(match.group(1))
+    # else :
+    #     t_count = 100000000
     
     try :
         locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
@@ -499,10 +502,10 @@ def index(request):
         locale.setlocale(locale.LC_ALL, 'en_US')
         
     regulations_count = locale.format("%d", r_count, grouping=True)
-    triples_count = locale.format("%d", t_count, grouping=True)
+    #triples_count = locale.format("%d", t_count, grouping=True)
     
     t = get_template('index.html')
-    html = t.render(RequestContext(request, { 'regulations': regulations_count, 'triples': triples_count }))
+    html = t.render(RequestContext(request, { 'regulations': regulations_count}))
     return HttpResponse(html)
 
 

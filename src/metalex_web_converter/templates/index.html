@@ -31,7 +31,7 @@ version 3.
 -->
 {% extends "base.html" %} {% block content %}
 		<div class="hero-unit">
-			<h1>{{ triples }} triples</h1>
+			<h1>{{ regulations }} regulations</h1>
 			<p>This service hosts (almost) all Dutch national regulations in <a
 				href="http://www.metalex.eu">CEN MetaLex</a> XML and as RDF <a href="http://www.w3.org/standards/semanticweb/data">Linked Data</a>.
 			Current coverage is <strong>{{ regulations }}</strong> document versions, covering practically all
@@ -49,11 +49,11 @@ version 3.
 <p>This server was developed by <a href="mailto:hoekstra@uva.nl">Rinke Hoekstra</a> and is maintained by the <a href="http://www.leibnizcenter.org">Leibniz Center for Law</a> of the <a href="http://www.uva.nl">Universiteit van Amsterdam</a>.</p>
 <p>
 	The regulations were automatically converted by means of a (hopefully)
-	<a href="http://github.com/RinkeHoekstra/metalex-converter">generic
+	<a href="http://github.com/CENMetaLex/metalex-converter">generic
 		conversion script</a>, that is able to perform a similar conversion for
 	any 'legislative' XML based on a standard mapping from legacy XML
 	elements to CEN MetaLex. See the script's <a
-		href="http://github.com/RinkeHoekstra/metalex-converter">GitHub
+		href="http://github.com/CENMetaLex/metalex-converter">GitHub
 		page</a> for installation and usage instructions.
 </p>
 <p> A report on this work will be published as part of the proceedings of the <a href="http://iswc2011.semanticweb.org/fileadmin/iswc/Papers/In-Use/70320129.pdf">International Semantic Web Conference</a> (ISWC) 2011: "<em>Rinke Hoekstra</em>. The MetaLex Document Server - Legal Documents as Versioned Linked Data"</p>
