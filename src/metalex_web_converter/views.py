@@ -558,8 +558,10 @@ def index(request):
     regulations_count = locale.format("%d", r_count, grouping=True)
     #triples_count = locale.format("%d", t_count, grouping=True)
     
+    form = QueryForm()
+    
     t = get_template('index.html')
-    html = t.render(RequestContext(request, { 'regulations': regulations_count}))
+    html = t.render(RequestContext(request, { 'regulations': regulations_count, 'form': form}))
     return HttpResponse(html)
 
 

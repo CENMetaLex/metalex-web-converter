@@ -29,18 +29,42 @@ version 3.
 
 @summary: Main page
 -->
-{% extends "base.html" %} {% block content %}
-		<div class="hero-unit">
-			<h1>{{ regulations }} regulations</h1>
-			<p>This service hosts (almost) all Dutch national regulations in <a
-				href="http://www.metalex.eu">CEN MetaLex</a> XML and as RDF <a href="http://www.w3.org/standards/semanticweb/data">Linked Data</a>.
-			Current coverage is <strong>{{ regulations }}</strong> document versions, covering practically all
-			regulations available through <a href="http://wetten.overheid.nl">http://wetten.overheid.nl</a></p>
-			<p><a class="btn primary large" href="http://doc.metalex.eu/search">Search &raquo;</a></p>
+{% extends "base.html" %} 
+{% block content %}
+<style>
+
+.page-header {
+	background-image: url('/static/book.png');
+	background-size: contain;
+	background-position: right bottom;
+	background-repeat: no-repeat;
+	padding-top: 6em;
+}
+
+</style>
+		<div class="page-header">
+			<div class="row">
+				<div class="col-lg-9">
+					<h1>Dutch Regulations as Linked Data</h1>
+					<!-- <h1>{{ regulations }} regulations</h1> -->
+					<p class='lead'>The MetaLex Document Server hosts pretty much all Dutch national regulations in <a
+						href="http://www.metalex.eu">CEN MetaLex</a> <a href="http://www.w3.org/standards/semanticweb/data">Linked Data</a>.
+					They were obtained, converted and enriched from the official <a href="http://wetten.overheid.nl">Wetten.nl</a> portal.</p>
+					
+					<form role="form"action="/search" method="post" class="form-inline">{% csrf_token %}
+						<div class="form-group">
+							<input class="form-control" placeholder="Title" id="id_title" type="text" name="title" maxlength="150" />
+							<input class="form-control" placeholder="Date" type="text" name="date" value="2014-02-17" id="id_date" />
+						</div>
+						<button type="submit" value="Submit" class="btn btn-primary">Search</button>
+					</form>
+					<!-- <p class="lead"><a class="btn btn-default btn-lg" href="http://doc.metalex.eu/search">Search &raquo;</a></p> -->
+				</div>
+			</div>
 		</div>
         
 		<div class="row">
-			<div class="span8">
+			<div class="col-lg-8">
 <h2>Information</h2>
 <p>This service hosts (almost) all Dutch national regulations in <a
 				href="http://www.metalex.eu">CEN MetaLex</a> XML and as RDF <a href="http://www.w3.org/standards/semanticweb/data">Linked Data</a>.
@@ -58,21 +82,28 @@ version 3.
 </p>
 <p> A report on this work will be published as part of the proceedings of the <a href="http://iswc2011.semanticweb.org/fileadmin/iswc/Papers/In-Use/70320129.pdf">International Semantic Web Conference</a> (ISWC) 2011: "<em>Rinke Hoekstra</em>. The MetaLex Document Server - Legal Documents as Versioned Linked Data"</p>
 
-<p><a class="btn" target="_new" href="http://www.slideshare.net/rinkehoekstra/the-metalex-document-server-legal-documents-as-versioned-linked-data">View presentation &raquo;</a></p>
+<p><a class="btn btn-default" target="_new" href="http://www.slideshare.net/rinkehoekstra/the-metalex-document-server-legal-documents-as-versioned-linked-data">View presentation &raquo;</a></p>
 
 			</div>
-			<div class="span8">
-				<h2>MetaLex and Linked Data</h2>
-				
-				<p><a href="http://www.metalex.eu">CEN MetaLex</a> is a standard for how sources of law and references to sources of law are to be represented in XML.  It is an interchange format, a lowest common denominator for other standards, intended not to replace jurisdiction-specific standards and vendor-specific formats in the publications process but to impose a standardized view on legal documents for the purposes of information exchange and interoperability in the context of software development.</p>
-				<p><a href="http://www.w3.org/standards/semanticweb/data">Linked Data</a> is a W3C sanctioned approach to publishing metadata on the Web using a set of standard languages and metadata vocabularies.</p>
-				<p><a class="btn" href="http://www.metalex.eu">MetaLex &raquo;</a><a class="btn" href="http://www.w3.org/standards/semanticweb/data">Linked Data &raquo;</a></p>
+			<div class="col-lg-4">
+				<h3>&nbsp;</h3>
+				<div class="panel panel-default">
+					<div class="panel-body small">
+				    	<a href="http://www.metalex.eu">CEN MetaLex</a> is a standard for how sources of law and references to sources of law are to be represented in XML.  It is an interchange format, a lowest common denominator for other standards, intended not to replace jurisdiction-specific standards and vendor-specific formats in the publications process but to impose a standardized view on legal documents for the purposes of information exchange and interoperability in the context of software development.  
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-body small">
+				    	<a href="http://www.w3.org/standards/semanticweb/data">Linked Data</a> is a W3C sanctioned approach to publishing metadata on the Web using a set of standard languages and metadata vocabularies.
+					</div>
+				</div>
+				<!-- <p><a class="btn btn-default" href="http://www.metalex.eu">MetaLex &raquo;</a>&nbsp;<a class="btn btn-default" href="http://www.w3.org/standards/semanticweb/data">Linked Data &raquo;</a></p> -->
 			</div>
 		</div>
 
 
-<div class="row" style="padding-top: 3em;">
-	<div class="span8">
+<div class="row">
+	<div class="col-lg-6">
 <h2>Example</h2>
 <p>
 	The following links are several example URIs for the "Regeling
@@ -115,16 +146,16 @@ version 3.
 		href="http://curl.haxx.se/">curl</a>' to retrieve non-HTML content from the 'expression' and 'work' level URIs.
 </p>
 	</div>
-	<div class="span8">
+	<div class="col-lg-6">
 	
 <h2>Technical Details</h2>
 <h3>Metadata</h3>
-Metadata follows the guidelines of the CEN MetaLex standard. Legislative events are represented both by means of the MetaLex ontology, as well as using the <a href="http://openprovenance.org">Open Provenance Model</a> vocabulary (OPMV), the Simple Event Model (SEM) and the <a href="http://www.w3.org/TR/owl-time/">W3C Time Ontology</a>.
+Metadata follows the guidelines of the CEN MetaLex standard. Legislative events are represented both by means of the MetaLex ontology, as well as using the <a href="http://www.w3.org/TR/prov">W3C Provenance Vocabulary</a> (PROV), the Simple Event Model (SEM) and the <a href="http://www.w3.org/TR/owl-time/">W3C Time Ontology</a>.
 
 <h3>Store</h3>
 <p>
-	RDF representations of regulations reside in a <a
-		href="http://4store.org">4store</a> triple store, developed at Garlik.
+	RDF representations of regulations reside in an <a
+		href="http://ods.openlinksw.com/wiki/main/Main/VOSDownload">OpenLink Virtuoso Open Source Edition</a> triple store.
 </p>
 <p>MetaLex XML documents currently reside on the filesystem of the
 	server. We plan to move these to a native XML database to support
@@ -150,11 +181,14 @@ Metadata follows the guidelines of the CEN MetaLex standard. Legislative events 
 	<li>For RDF, Turtle and N3 we directly return the the result of a <a href="http://www.w3.org/TR/rdf-sparql-query/#describe">SPARQL DESCRIBE</a> query for the expression URI.</li>
 	<li>For HTML, we redirect (via HTTP 302) to a Marbles server that renders an HTML representation of the result of a <a href="http://www.w3.org/TR/rdf-sparql-query/#describe">SPARQL DESCRIBE</a> query for the expression URI. (Marbles actually sends a request to the expression URI with an accept header that makes this server redirect to the RDF description)</li>
 </ul>
-</div></div>
-<h3>Copyright (c) 2011 <small>- Rinke Hoekstra, Leibniz Center for Law, Universiteit van Amsterdam</small></h3>
+</div>
+</div>
+<div class="row">
+	<div class="col-lg-12">
+<h5>Copyright (c) 2011 <small>- Rinke Hoekstra, Leibniz Center for Law, Universiteit van Amsterdam</small></h5>
 
 
 	</div>
-
+</div>
 
 {% endblock %}

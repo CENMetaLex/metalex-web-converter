@@ -1,5 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
     
 <!-- 
 MetaLex Web Converter
@@ -33,9 +32,16 @@ version 3.
 @summary: Base Django template
 -->
 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<html lang="en">
 <head>
-	<link rel="stylesheet" href="http://doc.metalex.eu/static/css/bootstrap-1.1.0.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" media="screen">
+
+	<!-- Optional theme -->
+	<!-- <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css"> -->
+	<link rel="stylesheet" href="/static/css/journal-bootstrap.css">
+
     <title>MetaLex Document Server</title>
     <script type="text/javascript">
 		  var _gaq = _gaq || [];
@@ -51,11 +57,19 @@ version 3.
 </head>
 
 <body>
-	<div class="topbar">
-		<div class="fill">
-			<div class="container">
-				<h3><a href="/">The MetaLex Document Server</a></h3>
-				<ul>
+	<script src="http://bootswatch.com/assets/js/bsa.js"></script>
+	<div class="navbar navbar-default navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="/">The MetaLex Document Server</a>
+				<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+				            <span class="icon-bar"></span>
+				            <span class="icon-bar"></span>
+				            <span class="icon-bar"></span>
+				</button>
+			</div>
+			<div class="navbar-collapse collapse" id="navbar-main">
+				<ul class="nav navbar-nav navbar-right">
 					<li><a href="/data">Data</a></li>
 					<li><a href="/search">Search</a></li>
 				</ul>
@@ -65,5 +79,8 @@ version 3.
 	<div class="container">
         {% block content %}{% endblock %}
     </div>
+	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 </body>
 </html>
