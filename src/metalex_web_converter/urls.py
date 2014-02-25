@@ -71,6 +71,5 @@ urlpatterns = patterns('',
     ('^convert/(.+)$', convert),
     ('^query$', query),
     ('^search$', search),
-    ('^data$', data),
     ('^$', index)
 )
