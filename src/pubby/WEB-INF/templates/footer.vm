@@ -1,0 +1,18 @@
+	#set ($has_text = false)
+		<div class="row">
+		<div class="col-lg-12">
+		    <div id="footer" class="small">
+		#if ($sparql_endpoint)
+		      This page shows information obtained from the <a href="http://doc.metalex.eu">MetaLex Document Server</a> SPARQL endpoint at <a class="sparql-uri" href="$sparql_endpoint">$sparql_endpoint</a>.<br />
+					Note that this page is served under a different port (8080) than the standard MetaLex identifiers!<br/>
+		#end
+		    </div>
+		</div>
+		</div>
+		</div>
+	</div>
+	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+  </body>
+</html>
