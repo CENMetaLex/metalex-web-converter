@@ -32,7 +32,7 @@ version 3.
 '''
 
 from django.conf.urls.defaults import patterns
-from metalex_web_converter.views import index, search, redirect_to_latest, expression_data, work_data, no_work_data, generic_data, negotiate, convert, redirect, data, query
+from metalex_web_converter.views import index, search, redirect_to_latest, expression_data, work_data, no_work_data, generic_data, negotiate, convert, redirect, query
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
