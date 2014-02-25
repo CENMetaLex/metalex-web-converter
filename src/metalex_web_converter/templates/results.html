@@ -30,25 +30,33 @@ version 3.
 @summary: Search results
 -->
 {% extends "base.html" %} {% block content %}
-<h1>Results</h1>
 
+<div class="row" style="padding-top: 6em;">
+	<div class="col-lg-12">
+		<h2>Results</h2>
+		
+		<p>All regulation versions published after <strong>{{ date }}</strong> that have "<strong>{{ title }}</strong>" in their title.<br/></p>
+		
+		
+		{% regroup results by title as title_list %}
 
-
-{% for result in results %}
-
-
-
-<h2>{{ result.title }} <small>({{ result.time }})</small></h2>
-<table class="common-table zebra-striped">
-<tr><td>Resource:</td><td><a href="{{ result.uri }}">{{ result.uri }}</a></td></tr>
-<tr><td>Last event:</td><td><a href="{{ result.event_type }}">{{ result.event_type }}</a></td></tr>
-<tr><td rowspan="4" valign="top">Formats:</td><td><a href="{{ result.xml }}">{{ result.xml }}</a></td></tr>
-<tr><td><a href="{{ result.rdf }}">{{ result.rdf }}</a></td></tr>
-<tr><td><a href="{{ result.n3 }}">{{ result.n3 }}</a></td></tr>
-<!-- <tr><td><a href="{{ result.net }}">{{ result.net }}</a> (<a href="http://doc.metalex.eu:8080/metalex-gephi-servlet/gephi?uri={{ result.net }}">view</a>)</td></tr> -->
-</table>
-
-{% endfor %}
-
+			{% for title in title_list %}
+			
+				<h5>{{ title.grouper }}</h5>
+				<ul class="list-group">
+					{% for result in title.list %}
+					<li class="list-group-item">
+						<h6 class='list-group-item-heading'>Version of <strong>{{ result.date }}</strong><br/><small><a href="{{result.uri}}">{{result.uri}}</a></small></h6>
+						<div class='list-group-item-text' style='padding-top:1em;'>
+							<a href="{{ result.xml }}" class='btn btn-primary btn-xs'>View</a>
+							<a href="{{ result.uri }}" class='btn btn-info btn-xs'>Browse</a>
+							<a href="{{ result.n3 }}" class='btn btn-default btn-xs'>Download Turtle</a>
+						</div>
+					</li>
+					{% endfor %}
+				</ul>
+			{% endfor %}
+	</div>
+</div>
 
 {% endblock %}
