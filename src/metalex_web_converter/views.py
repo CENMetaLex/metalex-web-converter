@@ -570,6 +570,10 @@ def data(request):
     html = t.render(RequestContext(request))
     return HttpResponse(html)  
 
+def query(request):
+    t = get_template('query.html')
+    html = t.render(RequestContext(request))
+    return HttpResponse(html)  
 
 
 if __name__ == '__main__' :
