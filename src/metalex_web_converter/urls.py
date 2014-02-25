@@ -32,7 +32,7 @@ version 3.
 '''
 
 from django.conf.urls.defaults import patterns
-from metalex_web_converter.views import index, search, redirect_to_latest, expression_data, work_data, no_work_data, generic_data, negotiate, convert, redirect, query
+from metalex_web_converter.views import index, search, redirect_to_latest, expression_data, work_data, no_work_data, generic_data, negotiate, convert, redirect, query, redirect_pubby
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -68,6 +68,7 @@ urlpatterns = patterns('',
     ('^doc/(?P<path>.*?)$', negotiate),
     ('^id/(?P<bwbid>BWB\w\d+)(?P<path>.*)/latest', redirect_to_latest),
     ('^(id|bwb)/(?P<path>.*)$', redirect),
+    ('^(?P<pd>page|data)/(?P<path>.*)$', redirect_pubby),
     ('^convert/(.+)$', convert),
     ('^query$', query),
     ('^search$', search),

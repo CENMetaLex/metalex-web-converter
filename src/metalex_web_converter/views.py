@@ -361,7 +361,12 @@ def redirect(request, path):
     
     return redir_response
 
-
+def redirect_pubby(request, pd, path):    
+    redir_response = HttpResponse('')
+    redir_response.status_code = 303
+    redir_response['Location'] = 'http://doc.metalex.eu:8080/{0}/{1}'.format(pd,path)
+    
+    return redir_response
 
 def check_available(bwbid, path, version):
     uri = '<http://doc.metalex.eu/id/{0}{1}{2}>'.format(bwbid, path, version)
