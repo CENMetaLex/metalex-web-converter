@@ -35,7 +35,7 @@ version 3.
 	<div class="col-lg-12">
 		<h2>Results</h2>
 		
-		<p>All regulation versions published after <strong>{{ date }}</strong> that have "<strong>{{ title }}</strong>" in their title.<br/></p>
+		<p>All regulation versions published before <strong>{{ date }}</strong> that have "<strong>{{ title }}</strong>" in their title.<br/></p>
 		
 		
 		{% regroup results by title as title_list %}
