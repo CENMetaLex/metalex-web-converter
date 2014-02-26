@@ -41,6 +41,7 @@ from whoosh.index import open_dir
 from rdflib import Namespace
 from forms import QueryForm
 from datetime import date, datetime, time
+import urllib
 import re
 import urllib2
 from lxml import etree
@@ -71,22 +72,34 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX dcterms: <http://purl.org/dc/terms/>
 PREFIX prov: <http://www.w3.org/ns/prov#>
 
-SELECT DISTINCT ?regulation ?title ?date WHERE {{
+SELECT DISTINCT ?regulation ?title ?date ?sc WHERE {{
   ?regulation dcterms:title ?title .
-  ?title bif:contains "{}" .
+  ?title bif:contains "{}"  OPTION( SCORE ?sc ).
   ?regulation prov:wasGeneratedAtTime ?date .
   
   FILTER(?date <= '{}'^^xsd:date)
-}} ORDER BY DESC(?title) DESC(?date) LIMIT 500
-""".format(title, date)
+}} ORDER BY DESC(?sc) LIMIT 500
+"""
             
             
-           
+            
             sparql = SPARQLWrapper(SPARQL_ENDPOINT)
-            sparql.setQuery(query)        
+                
             sparql.setReturnFormat(JSON)
-                 
-            sparql_results = sparql.query().convert()
+            
+            try :
+                formatted_query = query.format(title, date)
+                sparql.setQuery(formatted_query)    
+                sparql_results = sparql.query().convert()
+            except :
+                try :
+                    formatted_query = query.format("'{}'".format(title),date)
+                    sparql.setQuery(formatted_query)
+                    sparql_results = sparql.query().convert()
+                except :
+                    return HttpResponse("Something went wrong!<br/>Your query was:<br/><pre>{}</pre>".format(formatted_query))
+                    
+                
             
             results = []
             for row in sparql_results['results']['bindings'] :
@@ -97,12 +110,14 @@ SELECT DISTINCT ?regulation ?title ?date WHERE {{
                 r['date'] = row['date']['value']
                 r['xml'] = r['uri'].replace('/id/','/doc/') + '/data.xml' 
                 r['n3'] = r['uri'].replace('/id/','/doc/') + '/data.n3'
+                r['score'] = row['sc']['value']
                 
                 results.append(r)
-
-                    
+            
+            endpoint = "http://doc.metalex.eu:8000/sparql"
+            query_link = "http://yasgui.data2semantics.org/?query={}&endpoint={}&tabTitle={}".format(urllib.quote(formatted_query),urllib.quote(endpoint), urllib.quote(title))
             t = get_template('results.html')
-            html = t.render(RequestContext(request, {'results': results, 'title': title, 'date': date, 'query': query}))
+            html = t.render(RequestContext(request, {'results': results, 'title': title, 'date': date, 'query_link': query_link}))
             
             return HttpResponse(html)       
 
