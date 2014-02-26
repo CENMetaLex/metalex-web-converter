@@ -39,7 +39,7 @@ version 3.
 		<form role="form" action="/search" method="post" class="form-inline">
 			{% csrf_token %}
 			<div class="form-group">
-				<input class="form-control" placeholder="Title" id="id_title" type="text" name="title" maxlength="150"> <input class="form-control" placeholder="Date" type="text" name="date" value="2014-02-17" id="id_date">
+				<input class="form-control" placeholder="Title" id="id_title" type="text" name="title" maxlength="150"> <input class="form-control" placeholder="Date" type="text" name="date" value='{% now "Y-m-d" %}' id="id_date">
 			</div><button type="submit" value="Submit" class="btn btn-primary">Search</button>
 		</form>
 	</div>
