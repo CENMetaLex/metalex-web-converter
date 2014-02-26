@@ -78,7 +78,7 @@ SELECT DISTINCT ?regulation ?title ?date ?sc WHERE {{
   ?regulation prov:wasGeneratedAtTime ?date .
   
   FILTER(?date <= '{}'^^xsd:date)
-}} ORDER BY DESC(?sc) LIMIT 500
+}} ORDER BY DESC(?sc) DESC(?date) LIMIT 500
 """
             
             
