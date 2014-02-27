@@ -1,0 +1,30 @@
+http://yasgui.data2semantics.org?jsonSettings={
+    "defaults": {
+        "endpoint": "http://doc.metalex.eu:8000/sparql",
+        "query": "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT * {\n\t?sub ?pred ?obj\n} LIMIT 10\n",
+        "tabTitle": "Query",
+        "contentTypeSelect": "application/sparql-results+xml",
+        "contentTypeConstruct": "text/turtle",
+        "outputFormat": "table",
+        "requestMethod": "POST",
+        "extraArgs": []
+    },
+    "enabledFeatures": {
+        "endpointSelection": false,
+        "queryParameters": true,
+        "namedGraphs": true,
+        "defaultGraphs": true,
+        "acceptHeaders": true,
+        "requestMethod": true,
+        "propertyCompletionMethods": {
+            "lov": true,
+            "query": true,
+            "queryResults": true
+        },
+        "classCompletionMethods": {
+            "lov": true,
+            "query": true,
+            "queryResults": true
+        }
+    }
+}
