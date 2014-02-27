@@ -31,12 +31,28 @@ version 3.
 -->
 {% extends "base.html" %} {% block content %}
 
-<div class="row" style="padding-top: 6em;">
+<div class="row">
+	<div class="col-lg-12" style='padding-top: 6em;'>
+		<h2>Search</h2>
+		<p>You can search by typing (part of) a title, and a date before which the document was published.</p>
+	
+		<form role="form" action="/search" method="post" class="form-inline">
+			{% csrf_token %}
+			<div class="form-group">
+				<input class="form-control" placeholder="Title" id="id_title" type="text" name="title" maxlength="150"> <input class="form-control" placeholder="Date" type="text" name="date" value='{% now "Y-m-d" %}' id="id_date">
+			</div><button type="submit" value="Submit" class="btn btn-primary">Search</button>
+		</form>
+	</div>
+</div>
+<div class="row">
 	<div class="col-lg-12">
 		<h2>Results</h2>
 		
 		<p>All regulation versions published before <strong>{{ date }}</strong> that have "<strong>{{ title }}</strong>" in their title.<br/></p>
 		
+		<p>Click <a href="{{ query_link}}" target="_new">here</a> to open the underlying SPARQL query in YASGUI.</p>
+		
+		<hr style="padding-bottom: 1em;"/>
 		
 		{% regroup results by title as title_list %}
 
@@ -48,9 +64,9 @@ version 3.
 					<li class="list-group-item">
 						<h6 class='list-group-item-heading'>Version of <strong>{{ result.date }}</strong><br/><small><a href="{{result.uri}}">{{result.uri}}</a></small></h6>
 						<div class='list-group-item-text' style='padding-top:1em;'>
-							<a href="{{ result.xml }}" class='btn btn-primary btn-xs'>View</a>
-							<a href="{{ result.uri }}" class='btn btn-info btn-xs'>Browse</a>
-							<a href="{{ result.n3 }}" class='btn btn-default btn-xs'>Download Turtle</a>
+							<a href="{{ result.xml }}" target="_blank" class='btn btn-primary btn-xs'>View</a>
+							<a href="{{ result.uri }}" target="_blank" class='btn btn-info btn-xs'>Browse</a>
+							<a href="{{ result.n3 }}" target="_blank" class='btn btn-default btn-xs'>Download Turtle</a>
 						</div>
 					</li>
 					{% endfor %}
